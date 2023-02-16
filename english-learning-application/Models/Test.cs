@@ -5,13 +5,22 @@ namespace english_learning_application.Models
 	{
 		public Test()
 		{
+            WordsIds = new ArrayList();
         }
 
-	//	-timePerWord
-//-wordsIds
-//-ovnerId
-//-options int
-//-language
+        public int Id { get; set; }
+
+        public int TimePerWord { get; set; }
+
+        public int OwnerId { get; set; }
+
+        public int Options { get; set; }
+
+        public ArrayList WordsIds { get; set; }
+
+        public string Language { get; set; }
+
+
     }
 }
 
