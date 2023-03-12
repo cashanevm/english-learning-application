@@ -10,51 +10,51 @@ namespace english_learning_application.Data;
 
 public class ApplicationDbContext : IdentityDbContext
 {
-    public DbSet<Context> Contexts { get; set; }
+	public DbSet<Context> Contexts { get; set; }
 
-    public DbSet<Sentence> Sentences { get; set; }
+	public DbSet<Sentence> Sentences { get; set; }
 
-    public DbSet<Tag> Tags { get; set; }
+	public DbSet<Tag> Tags { get; set; }
 
-    public DbSet<Test> Tests { get; set; }
+	public DbSet<Test> Tests { get; set; }
 
-    public DbSet<TranslatedSentence> TranslatedSentences { get; set; }
+	public DbSet<TranslatedSentence> TranslatedSentences { get; set; }
 
-    public DbSet<TranslatedWord> TranslatedWords { get; set; }
+	public DbSet<TranslatedWord> TranslatedWords { get; set; }
 
-    public DbSet<Word> Words { get; set; }
+	public DbSet<Word> Words { get; set; }
 
-    public DbSet<DisplayWord> DisplayWords { get; set; }
+	public DbSet<DisplayWord> DisplayWords { get; set; }
 
-    public DbSet<DisplaySentence> DisplaySentences { get; set; }
+	public DbSet<DisplaySentence> DisplaySentences { get; set; }
 
-    public DbSet<Language> Languages { get; set; }
+	public DbSet<Language> Languages { get; set; }
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
+	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+		: base(options)
+	{
+	}
 
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        base.OnModelCreating(builder);
+	protected override void OnModelCreating(ModelBuilder builder)
+	{
+		base.OnModelCreating(builder);
 
-        //Context
-        builder.Entity<Context>()
-            .HasMany<TranslatedWord>(context => context.TranslatedWords)
-            .WithMany(translatedWord => translatedWord.Contexts);
+		//Context
+		builder.Entity<Context>()
+			.HasMany<TranslatedWord>(context => context.TranslatedWords)
+			.WithMany(translatedWord => translatedWord.Contexts);
 
-        builder.Entity<Context>()
-           .HasMany<TranslatedSentence>(context => context.TranslatedSentences)
-           .WithMany(translatedWord => translatedWord.Contexts);
+		builder.Entity<Context>()
+		   .HasMany<TranslatedSentence>(context => context.TranslatedSentences)
+		   .WithMany(translatedWord => translatedWord.Contexts);
 
-        builder.Entity<Context>()
-            .HasMany<Sentence>(context => context.Sentences)
-            .WithMany(translatedWord => translatedWord.Contexts);
+		builder.Entity<Context>()
+			.HasMany<Sentence>(context => context.Sentences)
+			.WithMany(translatedWord => translatedWord.Contexts);
 
-        builder.Entity<Context>()
-            .HasIndex(context => context.Name)
-            .IsUnique();
+		builder.Entity<Context>()
+			.HasIndex(context => context.Name)
+			.IsUnique();
 
 		//Test
 		builder.Entity<Test>()
