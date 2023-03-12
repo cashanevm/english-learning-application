@@ -34,5 +34,29 @@ public class ApplicationDbContext : IdentityDbContext
         : base(options)
     {
     }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        //Context
+        builder.Entity<Context>()
+            .HasMany<TranslatedWord>(context => context.TranslatedWords)
+            .WithMany(translatedWord => translatedWord.Contexts);
+
+        builder.Entity<Context>()
+           .HasMany<TranslatedSentence>(context => context.TranslatedSentences)
+           .WithMany(translatedWord => translatedWord.Contexts);
+
+        builder.Entity<Context>()
+            .HasMany<Sentence>(context => context.Sentences)
+            .WithMany(translatedWord => translatedWord.Contexts);
+
+        builder.Entity<Context>()
+            .HasIndex(context => context.Name)
+            .IsUnique();
+
+
+    }
 }
 
