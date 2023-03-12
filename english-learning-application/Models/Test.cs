@@ -8,10 +8,6 @@ namespace english_learning_application.Models
     [PrimaryKey(nameof(ID))]
     public class Test
 	{
-		//public Test()
-		//{
-  //          //WordsIds = new ArrayList();
-  //      }
 
         public int ID { get; set; }
 

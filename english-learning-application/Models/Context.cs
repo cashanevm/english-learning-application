@@ -9,7 +9,6 @@ namespace english_learning_application.Models
     [PrimaryKey(nameof(ID), nameof(Name))]
     public class Context
     {
-        //public Context() { }
 
         public int ID { get; set; }
 
