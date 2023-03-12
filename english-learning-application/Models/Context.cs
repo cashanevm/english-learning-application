@@ -12,6 +12,7 @@ namespace english_learning_application.Models
 
         public int ID { get; set; }
 
+        //unic key
         public string Name { get; set; }
 
     }

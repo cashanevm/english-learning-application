@@ -24,6 +24,12 @@ public class ApplicationDbContext : IdentityDbContext
 
     public DbSet<Word> Words { get; set; }
 
+    public DbSet<DisplayWord> DisplayWords { get; set; }
+
+    public DbSet<DisplaySentence> DisplaySentences { get; set; }
+
+    public DbSet<Language> Languages { get; set; }
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
