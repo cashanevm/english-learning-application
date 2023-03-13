@@ -17,11 +17,13 @@ namespace english_learning_application.Models
 
         public int Options { get; set; }
 
+        //many Test to many Word
         public List<Word> Words { get; set; }
 
-        public string Language { get; set; }
-
-
+        //foreign key
+        //many Test to one Language
+        public int LanguageId { get; set; }
+        public Language Language { get; set; }
     }
 }
 

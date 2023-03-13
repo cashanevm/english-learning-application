@@ -10,15 +10,23 @@ namespace english_learning_application.Models
 	{
         public int ID { get; set; }
 
+        //many TranslatedWord to many Contexts
         public List<Context> Contexts { get; set; }
 
-        public int OwnerId { get; set; } 
+        public int OwnerId { get; set; }
 
-        public string Word { get; set; }
+        //foreign key
+        //many TranslatedWord to one Word
+        public int WordId { get; set; }
+        public Word Word { get; set; }
 
+        //unic key
         public string Translation { get; set; }
 
-        public string Language { get; set; }
+        //foreign key
+        //many TranslatedWord to one Language
+        public int LanguageId { get; set; }
+        public Language Language { get; set; }
     }
 }
 
