@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace english_learning_application.Models
 {
-    [PrimaryKey(nameof(ID), nameof(OriginalWord))]
+    [PrimaryKey(nameof(ID))]
     public class Word
 	{
         public int ID { get; set; }

@@ -11,14 +11,59 @@ using english_learning_application.Data;
 namespace english_learning_application.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230222185953_Init")]
-    partial class Init
+    [Migration("20230313063554_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
+
+            modelBuilder.Entity("ContextSentence", b =>
+                {
+                    b.Property<int>("ContextsID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SentencesID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ContextsID", "SentencesID");
+
+                    b.HasIndex("SentencesID");
+
+                    b.ToTable("ContextSentence");
+                });
+
+            modelBuilder.Entity("ContextTranslatedSentence", b =>
+                {
+                    b.Property<int>("ContextsID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TranslatedSentencesID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ContextsID", "TranslatedSentencesID");
+
+                    b.HasIndex("TranslatedSentencesID");
+
+                    b.ToTable("ContextTranslatedSentence");
+                });
+
+            modelBuilder.Entity("ContextTranslatedWord", b =>
+                {
+                    b.Property<int>("ContextsID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TranslatedWordsID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ContextsID", "TranslatedWordsID");
+
+                    b.HasIndex("TranslatedWordsID");
+
+                    b.ToTable("ContextTranslatedWord");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -216,32 +261,116 @@ namespace english_learning_application.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TagWord", b =>
+                {
+                    b.Property<int>("TagsID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("WordsID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("TagsID", "WordsID");
+
+                    b.HasIndex("WordsID");
+
+                    b.ToTable("TagWord");
+                });
+
+            modelBuilder.Entity("TestWord", b =>
+                {
+                    b.Property<int>("TestsID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("WordsID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("TestsID", "WordsID");
+
+                    b.HasIndex("WordsID");
+
+                    b.ToTable("TestWord");
+                });
+
             modelBuilder.Entity("english_learning_application.Models.Context", b =>
                 {
                     b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("SentenceID")
-                        .HasColumnType("INTEGER");
+                    b.HasKey("ID");
 
-                    b.Property<int?>("TranslatedSentenceID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("TranslatedWordID")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID", "Name");
-
-                    b.HasIndex("SentenceID");
-
-                    b.HasIndex("TranslatedSentenceID");
-
-                    b.HasIndex("TranslatedWordID");
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Contexts");
+                });
+
+            modelBuilder.Entity("english_learning_application.Models.DisplaySentence", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Display")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SentenceId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("Display")
+                        .IsUnique();
+
+                    b.HasIndex("SentenceId");
+
+                    b.ToTable("DisplaySentences");
+                });
+
+            modelBuilder.Entity("english_learning_application.Models.DisplayWord", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Display")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("WordId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("Display")
+                        .IsUnique();
+
+                    b.HasIndex("WordId");
+
+                    b.ToTable("DisplayWords");
+                });
+
+            modelBuilder.Entity("english_learning_application.Models.Language", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.ToTable("Languages");
                 });
 
             modelBuilder.Entity("english_learning_application.Models.Sentence", b =>
@@ -257,15 +386,15 @@ namespace english_learning_application.Data.Migrations
                     b.Property<int>("OwnerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SentenceDisplay")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Word")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("WordId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("OriginalSentence")
+                        .IsUnique();
+
+                    b.HasIndex("WordId");
 
                     b.ToTable("Sentences");
                 });
@@ -273,20 +402,17 @@ namespace english_learning_application.Data.Migrations
             modelBuilder.Entity("english_learning_application.Models.Tag", b =>
                 {
                     b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("WordID")
-                        .HasColumnType("INTEGER");
+                    b.HasKey("ID");
 
-                    b.Property<string>("WordOriginalWord")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ID", "Name");
-
-                    b.HasIndex("WordID", "WordOriginalWord");
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Tags");
                 });
@@ -297,9 +423,8 @@ namespace english_learning_application.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Language")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Options")
                         .HasColumnType("INTEGER");
@@ -312,6 +437,8 @@ namespace english_learning_application.Data.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("LanguageId");
+
                     b.ToTable("Tests");
                 });
 
@@ -321,22 +448,32 @@ namespace english_learning_application.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("OwnerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("TransLanguage")
+                    b.Property<int>("SentenceId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Translation")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TranslSentence")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Word")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("WordId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("SentenceId");
+
+                    b.HasIndex("Translation")
+                        .IsUnique();
+
+                    b.HasIndex("WordId");
 
                     b.ToTable("TranslatedSentences");
                 });
@@ -347,9 +484,8 @@ namespace english_learning_application.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Language")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("OwnerId")
                         .HasColumnType("INTEGER");
@@ -358,11 +494,17 @@ namespace english_learning_application.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Word")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("WordId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("Translation")
+                        .IsUnique();
+
+                    b.HasIndex("WordId");
 
                     b.ToTable("TranslatedWords");
                 });
@@ -370,23 +512,64 @@ namespace english_learning_application.Data.Migrations
             modelBuilder.Entity("english_learning_application.Models.Word", b =>
                 {
                     b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("OriginalWord")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("TestID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("WordDisplay")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("ID", "OriginalWord");
+                    b.HasKey("ID");
 
-                    b.HasIndex("TestID");
+                    b.HasIndex("OriginalWord")
+                        .IsUnique();
 
                     b.ToTable("Words");
+                });
+
+            modelBuilder.Entity("ContextSentence", b =>
+                {
+                    b.HasOne("english_learning_application.Models.Context", null)
+                        .WithMany()
+                        .HasForeignKey("ContextsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("english_learning_application.Models.Sentence", null)
+                        .WithMany()
+                        .HasForeignKey("SentencesID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ContextTranslatedSentence", b =>
+                {
+                    b.HasOne("english_learning_application.Models.Context", null)
+                        .WithMany()
+                        .HasForeignKey("ContextsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("english_learning_application.Models.TranslatedSentence", null)
+                        .WithMany()
+                        .HasForeignKey("TranslatedSentencesID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ContextTranslatedWord", b =>
+                {
+                    b.HasOne("english_learning_application.Models.Context", null)
+                        .WithMany()
+                        .HasForeignKey("ContextsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("english_learning_application.Models.TranslatedWord", null)
+                        .WithMany()
+                        .HasForeignKey("TranslatedWordsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -440,58 +623,151 @@ namespace english_learning_application.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("english_learning_application.Models.Context", b =>
+            modelBuilder.Entity("TagWord", b =>
                 {
-                    b.HasOne("english_learning_application.Models.Sentence", null)
-                        .WithMany("Contexts")
-                        .HasForeignKey("SentenceID");
+                    b.HasOne("english_learning_application.Models.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("english_learning_application.Models.TranslatedSentence", null)
-                        .WithMany("Contexts")
-                        .HasForeignKey("TranslatedSentenceID");
-
-                    b.HasOne("english_learning_application.Models.TranslatedWord", null)
-                        .WithMany("Contexts")
-                        .HasForeignKey("TranslatedWordID");
-                });
-
-            modelBuilder.Entity("english_learning_application.Models.Tag", b =>
-                {
                     b.HasOne("english_learning_application.Models.Word", null)
-                        .WithMany("Tags")
-                        .HasForeignKey("WordID", "WordOriginalWord");
+                        .WithMany()
+                        .HasForeignKey("WordsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("english_learning_application.Models.Word", b =>
+            modelBuilder.Entity("TestWord", b =>
                 {
                     b.HasOne("english_learning_application.Models.Test", null)
-                        .WithMany("Words")
-                        .HasForeignKey("TestID");
+                        .WithMany()
+                        .HasForeignKey("TestsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("english_learning_application.Models.Word", null)
+                        .WithMany()
+                        .HasForeignKey("WordsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("english_learning_application.Models.DisplaySentence", b =>
+                {
+                    b.HasOne("english_learning_application.Models.Sentence", "Sentence")
+                        .WithMany("DisplaySentences")
+                        .HasForeignKey("SentenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Sentence");
+                });
+
+            modelBuilder.Entity("english_learning_application.Models.DisplayWord", b =>
+                {
+                    b.HasOne("english_learning_application.Models.Word", "Word")
+                        .WithMany("DisplayWords")
+                        .HasForeignKey("WordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Word");
                 });
 
             modelBuilder.Entity("english_learning_application.Models.Sentence", b =>
                 {
-                    b.Navigation("Contexts");
+                    b.HasOne("english_learning_application.Models.Word", "Word")
+                        .WithMany("Sentences")
+                        .HasForeignKey("WordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Word");
                 });
 
             modelBuilder.Entity("english_learning_application.Models.Test", b =>
                 {
-                    b.Navigation("Words");
+                    b.HasOne("english_learning_application.Models.Language", "Language")
+                        .WithMany("Tests")
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Language");
                 });
 
             modelBuilder.Entity("english_learning_application.Models.TranslatedSentence", b =>
                 {
-                    b.Navigation("Contexts");
+                    b.HasOne("english_learning_application.Models.Language", "Language")
+                        .WithMany("TranslatedSentences")
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("english_learning_application.Models.Sentence", "Sentence")
+                        .WithMany("TranslatedSentences")
+                        .HasForeignKey("SentenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("english_learning_application.Models.Word", "Word")
+                        .WithMany("TranslatedSentences")
+                        .HasForeignKey("WordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Language");
+
+                    b.Navigation("Sentence");
+
+                    b.Navigation("Word");
                 });
 
             modelBuilder.Entity("english_learning_application.Models.TranslatedWord", b =>
                 {
-                    b.Navigation("Contexts");
+                    b.HasOne("english_learning_application.Models.Language", "Language")
+                        .WithMany("TranslatedWords")
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("english_learning_application.Models.Word", "Word")
+                        .WithMany("TranslatedWords")
+                        .HasForeignKey("WordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Language");
+
+                    b.Navigation("Word");
+                });
+
+            modelBuilder.Entity("english_learning_application.Models.Language", b =>
+                {
+                    b.Navigation("Tests");
+
+                    b.Navigation("TranslatedSentences");
+
+                    b.Navigation("TranslatedWords");
+                });
+
+            modelBuilder.Entity("english_learning_application.Models.Sentence", b =>
+                {
+                    b.Navigation("DisplaySentences");
+
+                    b.Navigation("TranslatedSentences");
                 });
 
             modelBuilder.Entity("english_learning_application.Models.Word", b =>
                 {
-                    b.Navigation("Tags");
+                    b.Navigation("DisplayWords");
+
+                    b.Navigation("Sentences");
+
+                    b.Navigation("TranslatedSentences");
+
+                    b.Navigation("TranslatedWords");
                 });
 #pragma warning restore 612, 618
         }

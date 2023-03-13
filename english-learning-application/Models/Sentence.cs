@@ -10,7 +10,7 @@ namespace english_learning_application.Models
 	{
         public int ID { get; set; }
 
-        //many TranslatedWord to many Context
+        //many Sentence to many Context
         public List<Context> Contexts { get; set; }
 
         //many DisplaySentence to one Sentence
