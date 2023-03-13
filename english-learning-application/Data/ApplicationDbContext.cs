@@ -39,8 +39,41 @@ public class ApplicationDbContext : IdentityDbContext
 	{
 		base.OnModelCreating(builder);
 
-		//Context
-		builder.Entity<Context>()
+        //Sentence
+        //builder.Entity<Sentence>()
+        //     .HasMany<Context>(sentence => sentence.Contexts)
+        //     .WithMany(context => context.Sentences);
+
+        builder.Entity<Sentence>()
+            .HasMany<DisplaySentence>(sentence => sentence.DisplaySentences)
+            .WithOne(displaySentence => displaySentence.Sentence)
+             .HasForeignKey(displaySentence => displaySentence.SentenceId);
+
+        builder.Entity<Sentence>()
+            .HasMany<TranslatedSentence>(sentence => sentence.TranslatedSentences)
+            .WithOne(translatedSentence => translatedSentence.Sentence)
+            .HasForeignKey(translatedSentence => translatedSentence.SentenceId);
+
+        builder.Entity<Sentence>()
+            .HasOne<Word>(sentence => sentence.Word)
+            .WithMany(word => word.Sentences)
+            .HasForeignKey(sentence => sentence.WordId);
+
+        builder.Entity<Sentence>()
+           .HasIndex(sentence => sentence.OriginalSentence)
+           .IsUnique();
+
+        //Tag
+        builder.Entity<Tag>()
+            .HasMany<Word>(tag => tag.Words)
+            .WithMany(words => words.Tags);
+
+        builder.Entity<Tag>()
+            .HasIndex(tag => tag.Name)
+            .IsUnique();
+
+        //Context
+        builder.Entity<Context>()
 			.HasMany<TranslatedWord>(context => context.TranslatedWords)
 			.WithMany(translatedWord => translatedWord.Contexts);
 
