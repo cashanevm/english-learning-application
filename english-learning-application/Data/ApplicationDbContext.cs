@@ -55,7 +55,36 @@ public class ApplicationDbContext : IdentityDbContext
         builder.Entity<Context>()
             .HasIndex(context => context.Name)
             .IsUnique();
+        //Word
+        builder.Entity<Word>()
+         .HasMany<DisplayWord>(word => word.DisplayWords)
+         .WithOne(displayWord => displayWord.Word)
+         .HasForeignKey(displayWord => displayWord.WordId);
 
+        builder.Entity<Word>()
+            .HasMany<TranslatedWord>(word => word.TranslatedWords)
+             .WithOne(translatedWord => translatedWord.Word)
+         .HasForeignKey(translatedWord => translatedWord.WordId);
+
+
+        builder.Entity<Word>()
+            .HasIndex(word => word.OriginalWord)
+            .IsUnique();
+
+        //DisplayWord
+        builder.Entity<DisplayWord>()
+            .HasIndex(displayWord => displayWord.Display)
+             .IsUnique();
+
+        //DisplaySentence
+        builder.Entity<DisplaySentence>()
+            .HasIndex(displaySentence => displaySentence.Display)
+            .IsUnique();
+
+        //Language
+        builder.Entity<Language>()
+         .HasIndex(language => language.Key)
+         .IsUnique();
 
     }
 }
