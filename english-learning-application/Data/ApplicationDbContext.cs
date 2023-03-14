@@ -41,23 +41,6 @@ public class ApplicationDbContext : IdentityDbContext
     {
         base.OnModelCreating(builder);
 
-        //Context
-        builder.Entity<Context>()
-            .HasMany<TranslatedWord>(context => context.TranslatedWords)
-            .WithMany(translatedWord => translatedWord.Contexts);
-
-        builder.Entity<Context>()
-           .HasMany<TranslatedSentence>(context => context.TranslatedSentences)
-           .WithMany(translatedWord => translatedWord.Contexts);
-
-        builder.Entity<Context>()
-            .HasMany<Sentence>(context => context.Sentences)
-            .WithMany(translatedWord => translatedWord.Contexts);
-
-        builder.Entity<Context>()
-            .HasIndex(context => context.Name)
-            .IsUnique();
-
         //Sentence
         //builder.Entity<Sentence>()
         //     .HasMany<Context>(sentence => sentence.Contexts)
@@ -91,7 +74,23 @@ public class ApplicationDbContext : IdentityDbContext
             .HasIndex(tag => tag.Name)
             .IsUnique();
 
+        //Context
+        builder.Entity<Context>()
+            .HasMany<TranslatedWord>(context => context.TranslatedWords)
+            .WithMany(translatedWord => translatedWord.Contexts);
 
+
+        builder.Entity<Context>()
+           .HasMany<TranslatedSentence>(context => context.TranslatedSentences)
+           .WithMany(translatedWord => translatedWord.Contexts);
+
+        builder.Entity<Context>()
+            .HasMany<Sentence>(context => context.Sentences)
+            .WithMany(translatedWord => translatedWord.Contexts);
+
+        builder.Entity<Context>()
+            .HasIndex(context => context.Name)
+            .IsUnique();
 
         //Test
         builder.Entity<Test>()
