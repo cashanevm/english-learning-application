@@ -29,6 +29,9 @@ namespace english_learning_application.Models
         //many TranslatedSentence to one Language
         public int LanguageId { get; set; }
         public Language Language { get; set; }
+
+        //unic key
+        public string Translation { get; set; }
     }
 }
 

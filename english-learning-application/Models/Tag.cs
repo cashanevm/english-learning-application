@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace english_learning_application.Models
 {
-    [PrimaryKey(nameof(ID), nameof(Name))]
+    [PrimaryKey(nameof(ID))]
     public class Tag
 	{
 		
