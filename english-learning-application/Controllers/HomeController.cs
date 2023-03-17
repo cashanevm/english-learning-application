@@ -4,6 +4,7 @@ using english_learning_application.Models;
 using english_learning_application.Data;
 using static System.Net.Mime.MediaTypeNames;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace english_learning_application.Controllers;
 
@@ -104,6 +105,13 @@ public class HomeController : Controller
         //    Language = language
         //};
 
+        //SpeechPart speechPart = new SpeechPart
+        //{
+        //    ID = 1,
+        //    Name = "noun"
+        //};
+
+
         //TranslatedWord translatedWord = new TranslatedWord
         //{
         //    ID = 1,
@@ -113,7 +121,9 @@ public class HomeController : Controller
         //    Word = word,
         //    Translation = "TranslatedWord",
         //    LanguageId = language.ID,
-        //    Language = language
+        //    Language = language,
+        //    SpeechPartId = speechPart.ID,
+        //    SpeechPart = speechPart
 
         //};
 
@@ -128,6 +138,10 @@ public class HomeController : Controller
         //    Language = language
         //};
 
+
+
+
+        //_applicationDbContext.SpeechParts.Add(speechPart);
         //_applicationDbContext.Contexts.Add(context);
         //_applicationDbContext.Sentences.Add(sentence);
         //_applicationDbContext.Tags.Add(tag);
@@ -150,9 +164,10 @@ public class HomeController : Controller
         //context.TranslatedSentences.Add(translatedSentence);
         //context.Sentences.Add(sentence);
         //translatedWord.Contexts.Add(context);
+
         //translatedSentence.Contexts.Add(context);
         //sentence.Contexts.Add(context);
-
+        //speechPart.TranslatedWords.Add(translatedWord);
         //word.DisplayWords.Add(displayWord);
         //word.Sentences.Add(sentence);
         //word.TranslatedSentences.Add(translatedSentence);
@@ -177,8 +192,13 @@ public class HomeController : Controller
         //_applicationDbContext.Tags.Update(tag);
         //_applicationDbContext.Sentences.Update(sentence);
         //_applicationDbContext.Contexts.Update(context);
+        //_applicationDbContext.SpeechParts.Update(speechPart);
 
         //_applicationDbContext.SaveChanges();
+
+        ViewBag.SpeechParts = _applicationDbContext.SpeechParts
+            .Include(l => l.TranslatedWords)
+            .ToList();
 
         ViewBag.Languages = _applicationDbContext.Languages
             .Include(l => l.Tests)
@@ -213,6 +233,7 @@ public class HomeController : Controller
             .Include(l => l.Contexts)
             .Include(l => l.Word)
             .Include(l => l.Language)
+             .Include(l => l.SpeechPart)
             .ToList();
 
         ViewBag.Words = _applicationDbContext.Words

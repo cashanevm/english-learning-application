@@ -68,33 +68,33 @@
 
             foreach (var b in ViewBag.Sentences)
             {
-    <tr>
-        <td>@b.ID</td>
-        <td>
-            @{foreach (var test in b.Contexts)
-                {
-                    <p>ID: @test.ID</p>
-                }
-            }
-        </td>
-        <td>
-            @{foreach (var test in b.DisplaySentences)
-                {
-                    <p>ID: @test.ID</p>
-                }
-            }
-        </td>
-        <td>
-            @{foreach (var test in b.TranslatedSentences)
-                {
-                    <p>ID: @test.ID</p>
-                }
-            }
-        </td>
-        <td>@b.OwnerId</td>
-        <td>@b.WordId</td>
-        <td>@b.OriginalSentence</td>
-    </tr>
+                <tr>
+                    <td>@b.ID</td>
+                    <td>
+                        @{foreach (var test in b.Contexts)
+                            {
+                                <p>ID: @test.ID</p>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @{foreach (var test in b.DisplaySentences)
+                            {
+                                <p>ID: @test.ID</p>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @{foreach (var test in b.TranslatedSentences)
+                            {
+                                <p>ID: @test.ID</p>
+                            }
+                        }
+                    </td>
+                    <td>@b.OwnerId</td>
+                    <td>@b.WordId</td>
+                    <td>@b.OriginalSentence</td>
+                </tr>
             }
         }
     </tbody>
@@ -126,7 +126,7 @@
             }
 
         }
-  
+
     </tbody>
 </table>
 <h1>Tests</h1>
@@ -208,6 +208,7 @@
             <td>WordId</td>
             <td>Translation</td>
             <td>LanguageId</td>
+            <td>SpeechPartId</td>
         </tr>
         @{
             foreach (var b in ViewBag.TranslatedWords)
@@ -225,6 +226,7 @@
                     <td>@b.WordId</td>
                     <td>@b.Translation</td>
                     <td>@b.LanguageId</td>
+                    <td>@b.SpeechPartId</td>
                 </tr>
             }
         }
@@ -373,6 +375,33 @@
                     <td>@b.ID</td>
                     <td>@b.WordId</td>
                     <td>@b.Display</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<h1>SpeechParts</h1>
+<table class="table">
+    <tbody>
+        <tr>
+            <td>ID</td>
+            <td>Name</td>
+            <td>TranslatedWords</td>
+        </tr>
+        @{
+            foreach (var b in ViewBag.SpeechParts)
+            { 
+                <tr>
+                    <td>@b.ID</td>
+                    <td>@b.Name</td>
+                    <td>
+                        @{foreach (var test in b.TranslatedWords)
+                            {
+                                <p>ID: @test.ID</p>
+                            }
+                        }
+                    </td>
                 </tr>
             }
         }

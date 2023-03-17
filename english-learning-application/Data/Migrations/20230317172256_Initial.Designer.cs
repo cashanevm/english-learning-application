@@ -11,7 +11,7 @@ using english_learning_application.Data;
 namespace english_learning_application.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230313063554_Initial")]
+    [Migration("20230317172256_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -399,6 +399,21 @@ namespace english_learning_application.Data.Migrations
                     b.ToTable("Sentences");
                 });
 
+            modelBuilder.Entity("english_learning_application.Models.SpeechPart", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("SpeechParts");
+                });
+
             modelBuilder.Entity("english_learning_application.Models.Tag", b =>
                 {
                     b.Property<int>("ID")
@@ -490,6 +505,9 @@ namespace english_learning_application.Data.Migrations
                     b.Property<int>("OwnerId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("SpeechPartId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Translation")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -500,6 +518,8 @@ namespace english_learning_application.Data.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("LanguageId");
+
+                    b.HasIndex("SpeechPartId");
 
                     b.HasIndex("Translation")
                         .IsUnique();
@@ -732,6 +752,12 @@ namespace english_learning_application.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("english_learning_application.Models.SpeechPart", "SpeechPart")
+                        .WithMany("TranslatedWords")
+                        .HasForeignKey("SpeechPartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("english_learning_application.Models.Word", "Word")
                         .WithMany("TranslatedWords")
                         .HasForeignKey("WordId")
@@ -739,6 +765,8 @@ namespace english_learning_application.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Language");
+
+                    b.Navigation("SpeechPart");
 
                     b.Navigation("Word");
                 });
@@ -757,6 +785,11 @@ namespace english_learning_application.Data.Migrations
                     b.Navigation("DisplaySentences");
 
                     b.Navigation("TranslatedSentences");
+                });
+
+            modelBuilder.Entity("english_learning_application.Models.SpeechPart", b =>
+                {
+                    b.Navigation("TranslatedWords");
                 });
 
             modelBuilder.Entity("english_learning_application.Models.Word", b =>

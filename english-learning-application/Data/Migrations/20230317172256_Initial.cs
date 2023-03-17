@@ -37,6 +37,19 @@ namespace english_learning_application.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SpeechParts",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SpeechParts", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
@@ -158,7 +171,8 @@ namespace english_learning_application.Data.Migrations
                     OwnerId = table.Column<int>(type: "INTEGER", nullable: false),
                     WordId = table.Column<int>(type: "INTEGER", nullable: false),
                     Translation = table.Column<string>(type: "TEXT", nullable: false),
-                    LanguageId = table.Column<int>(type: "INTEGER", nullable: false)
+                    LanguageId = table.Column<int>(type: "INTEGER", nullable: false),
+                    SpeechPartId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -167,6 +181,12 @@ namespace english_learning_application.Data.Migrations
                         name: "FK_TranslatedWords_Languages_LanguageId",
                         column: x => x.LanguageId,
                         principalTable: "Languages",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TranslatedWords_SpeechParts_SpeechPartId",
+                        column: x => x.SpeechPartId,
+                        principalTable: "SpeechParts",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -436,6 +456,11 @@ namespace english_learning_application.Data.Migrations
                 column: "LanguageId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TranslatedWords_SpeechPartId",
+                table: "TranslatedWords",
+                column: "SpeechPartId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TranslatedWords_Translation",
                 table: "TranslatedWords",
                 column: "Translation",
@@ -494,6 +519,9 @@ namespace english_learning_application.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Sentences");
+
+            migrationBuilder.DropTable(
+                name: "SpeechParts");
 
             migrationBuilder.DropTable(
                 name: "Languages");

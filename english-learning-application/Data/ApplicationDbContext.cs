@@ -32,6 +32,8 @@ public class ApplicationDbContext : IdentityDbContext
 
     public DbSet<Language> Languages { get; set; }
 
+    public DbSet<SpeechPart> SpeechParts { get; set; }
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
@@ -174,5 +176,10 @@ public class ApplicationDbContext : IdentityDbContext
          .HasIndex(language => language.Key)
          .IsUnique();
 
+        //SpeechPart
+        builder.Entity<SpeechPart>()
+            .HasMany<TranslatedWord>(word => word.TranslatedWords)
+             .WithOne(translatedWord => translatedWord.SpeechPart)
+         .HasForeignKey(translatedWord => translatedWord.SpeechPartId);
     }
 }

@@ -27,6 +27,9 @@ namespace english_learning_application.Models
         //many TranslatedWord to one Language
         public int LanguageId { get; set; }
         public Language Language { get; set; }
+
+        public int SpeechPartId { get; set; }
+        public SpeechPart SpeechPart { get; set; }
     }
 }
 
