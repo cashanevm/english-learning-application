@@ -13,6 +13,11 @@ namespace english_learning_application.Models
 
         //one SpeechPart to many TranslatedWord
         public List<TranslatedWord> TranslatedWords { get; set; }
+
+        public SpeechPart()
+        {
+            TranslatedWords = new List<TranslatedWord>();
+        }
     }
 }
 

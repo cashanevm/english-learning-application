@@ -19,6 +19,14 @@ namespace english_learning_application.Models
 
         //one Language to many TranslatedWord
         public List<TranslatedWord> TranslatedWords { get; set; }
+
+
+        public Language()
+        {
+            Tests = new List<Test>();
+            TranslatedSentences = new List<TranslatedSentence>();
+            TranslatedWords = new List<TranslatedWord>();
+        }
     }
 }
 

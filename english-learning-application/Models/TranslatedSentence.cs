@@ -32,6 +32,11 @@ namespace english_learning_application.Models
 
         //unic key
         public string Translation { get; set; }
+
+        public TranslatedSentence()
+        {
+            Contexts = new List<Context>();
+        }
     }
 }
 

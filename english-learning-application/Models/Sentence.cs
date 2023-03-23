@@ -2,6 +2,7 @@
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace english_learning_application.Models
 {
@@ -28,6 +29,13 @@ namespace english_learning_application.Models
 
         //unic key
         public string OriginalSentence { get; set; }
+
+        public Sentence()
+        {
+            Contexts = new List<Context>();
+            DisplaySentences = new List<DisplaySentence>();
+            TranslatedSentences = new List<TranslatedSentence>();
+        }
     }
 }
 

@@ -30,6 +30,11 @@ namespace english_learning_application.Models
 
         public int SpeechPartId { get; set; }
         public SpeechPart SpeechPart { get; set; }
+
+        public TranslatedWord()
+        {
+            Contexts = new List<Context>();
+        }
     }
 }
 

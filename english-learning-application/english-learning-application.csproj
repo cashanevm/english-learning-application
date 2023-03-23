@@ -18,4 +18,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Controllers\Dto\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\Dto\" />
+  </ItemGroup>
 </Project>

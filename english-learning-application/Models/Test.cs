@@ -24,6 +24,11 @@ namespace english_learning_application.Models
         //many Test to one Language
         public int LanguageId { get; set; }
         public Language Language { get; set; }
+
+        public Test()
+        {
+            Words = new List<Word>();
+        }
     }
 }
 

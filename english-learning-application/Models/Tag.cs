@@ -15,6 +15,11 @@ namespace english_learning_application.Models
 
         //many Tag to many Word
         public List<Word> Words { get; set; }
+
+         public Tag()
+        {
+            Words = new List<Word>();
+        }
     }
 }
 
