@@ -125,28 +125,28 @@ namespace english_learning_application.Controllers
         }
 
 
-        private void Modify(Sentence updatedContext)
+        private void Modify(Sentence updatedSentence)
         {
-            _context.Entry(updatedContext).State = EntityState.Modified;
-            _context.Sentences.Update(updatedContext);
+            _context.Entry(updatedSentence).State = EntityState.Modified;
+            _context.Sentences.Update(updatedSentence);
 
             _context.SaveChanges();
         }
 
-        private void UpdateRelation(SentenceRequestDto dto, Sentence updatedContext)
+        private void UpdateRelation(SentenceRequestDto dto, Sentence updatedSentence)
         {
-            Sentence oldContext = _context.Sentences.Include(l => l.Contexts)
+            Sentence oldSentence = _context.Sentences.Include(l => l.Contexts)
                 .Include(l => l.DisplaySentences)
                 .Include(l => l.TranslatedSentences)
                 .Include(l => l.Word)
-                .FirstOrDefault(x => x.ID == updatedContext.ID);
+                .FirstOrDefault(x => x.ID == updatedSentence.ID);
 
-            oldContext.Contexts.ForEach(translatedSentences =>
+            oldSentence.Contexts.ForEach(translatedSentences =>
             {
-                translatedSentences.Sentences.Remove(oldContext);
+                translatedSentences.Sentences.Remove(oldSentence);
             });
 
-            Modify(updatedContext);
+            Modify(updatedSentence);
 
             dto.ContextIds.ForEach(translatedSentenceId =>
             {
@@ -158,13 +158,13 @@ namespace english_learning_application.Controllers
 
                 if (newTranslatedSentence != null)
                 {
-                    newTranslatedSentence.Sentences.Add(updatedContext);
-                    updatedContext.Contexts.Add(newTranslatedSentence);
+                    newTranslatedSentence.Sentences.Add(updatedSentence);
+                    updatedSentence.Contexts.Add(newTranslatedSentence);
                 }
             }
                );
 
-            Modify(updatedContext);
+            Modify(updatedSentence);
         }
     }
 
