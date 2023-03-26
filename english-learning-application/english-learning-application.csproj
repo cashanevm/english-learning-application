@@ -19,9 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Controllers\Api\" />
     <None Remove="Controllers\Dto\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controllers\Api\" />
     <Folder Include="Controllers\Dto\" />
   </ItemGroup>
 </Project>

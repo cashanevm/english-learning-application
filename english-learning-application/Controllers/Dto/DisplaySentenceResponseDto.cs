@@ -15,11 +15,8 @@ namespace english_learning_application.Controllers.Dto
 
         public int ID { get; set; }
 
-        //foreign key
-        //many DisplaySentence to one Sentence
         public int SentenceId { get; set; }
 
-        //unic key
         public string Display { get; set; }
     }
 }

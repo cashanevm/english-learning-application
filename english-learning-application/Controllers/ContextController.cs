@@ -108,6 +108,7 @@ namespace english_learning_application.Controllers
 
             _applicationDbContext.Contexts.Remove(context);
             await _applicationDbContext.SaveChangesAsync();
+            //to-do handle returned list 
 
             return NoContent();
         }

@@ -29,8 +29,8 @@ namespace english_learning_application.Controllers
                 .Include(l => l.Sentences)
                 .Include(l => l.TranslatedSentences)
                 .Include(l => l.TranslatedWords)
-                .Include(l => l.Tests)
-                .ToList().Select(x => new WordResponseDto(x)); ;
+                .Include(l => l.Tests).AsNoTracking()
+                .ToList().Select(x => new WordResponseDto(x));
 
             return Ok(words);
         }
