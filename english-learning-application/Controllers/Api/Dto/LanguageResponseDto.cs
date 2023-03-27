@@ -2,9 +2,9 @@
 using english_learning_application.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace english_learning_application.Controllers.Dto
+namespace english_learning_application.Controllers.Api.Dto
 {
-	public class LanguageResponseDto
+	public class LanguageResponseDto    
 	{
 		public LanguageResponseDto(Language language)
 		{

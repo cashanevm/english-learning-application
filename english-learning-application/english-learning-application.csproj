@@ -23,7 +23,6 @@
     <None Remove="Controllers\Dto\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\Api\" />
-    <Folder Include="Controllers\Dto\" />
+    <Folder Include="Controllers\Api\Dto\" />
   </ItemGroup>
 </Project>

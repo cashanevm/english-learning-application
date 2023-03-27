@@ -1,11 +1,12 @@
 ﻿using System;
-namespace english_learning_application.Controllers.Dto
+
+namespace english_learning_application.Controllers.Api.Dto
 {
-	public class DisplayWordRequestDto
-	{
-		public DisplayWordRequestDto()
+    public class DisplayWordRequestDto
+    {
+        public DisplayWordRequestDto()
         {
-       
+
         }
 
         //foreign key

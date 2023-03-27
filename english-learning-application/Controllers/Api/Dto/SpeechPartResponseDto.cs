@@ -2,12 +2,12 @@
 using english_learning_application.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace english_learning_application.Controllers.Dto
+namespace english_learning_application.Controllers.Api.Dto
 {
-	public class SpeechPartResponseDto
-	{
-		public SpeechPartResponseDto(SpeechPart speechPart)
-		{
+    public class SpeechPartResponseDto
+    {
+        public SpeechPartResponseDto(SpeechPart speechPart)
+        {
             ID = speechPart.ID;
             Name = speechPart.Name;
             TranslatedWordIds = speechPart.TranslatedWords.Select(x => x.ID).ToList();

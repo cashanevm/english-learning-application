@@ -1,11 +1,11 @@
 ﻿using System;
 using english_learning_application.Models;
 
-namespace english_learning_application.Controllers.Dto
+namespace english_learning_application.Controllers.Api.Dto
 {
-	public class TranslatedWordRequestDto
-	{
-		public TranslatedWordRequestDto()
+    public class TranslatedWordRequestDto
+    {
+        public TranslatedWordRequestDto()
         {
             ContextIds = new List<int>();
         }
