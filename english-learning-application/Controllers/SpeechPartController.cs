@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using english_learning_application.Controllers.Dto;
 using english_learning_application.Data;
 using english_learning_application.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,9 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace english_learning_application.Controllers
 {
-    [ApiController]
-    [Route("api/speech-parts")]
-    public class SpeechPartController : ControllerBase
+	public class SpeechPartController : Controller
     {
         private readonly ApplicationDbContext _context;
 
@@ -19,88 +15,127 @@ namespace english_learning_application.Controllers
             _context = context;
         }
 
-        // GET: /SpeechPart
-        [HttpGet]
-        public IEnumerable<SpeechPartResponseDto> GetSpeechParts()
+        // GET: SpeechPart
+        public async Task<IActionResult> Index()
         {
-            return _context.SpeechParts
-                .Include(l => l.TranslatedWords)
-                .ToList().Select(x => new SpeechPartResponseDto(x)); ;
-
+            return View(await _context.SpeechParts.ToListAsync());
         }
 
-        // GET: /SpeechPart/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<SpeechPartResponseDto>> GetSpeechPart(int id)
+        // GET: SpeechPart/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
-            var speechPart = _context.SpeechParts
-                .Include(l => l.TranslatedWords)
-                .FirstOrDefault(x => x.ID == id);
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var speechPart = await _context.SpeechParts
+                  .Include(l => l.TranslatedWords)
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (speechPart == null)
             {
                 return NotFound();
             }
 
-            return new SpeechPartResponseDto(speechPart);
+            return View(speechPart);
         }
 
-        // PUT: /SpeechPart/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSpeechPart(int id, SpeechPartRequestDto dto)
+        // GET: SpeechPart/Create
+        public IActionResult Create()
         {
-            SpeechPart speechPart = new SpeechPart();
-            speechPart.ID = id;
-            speechPart.Name = dto.Name;
-
-            _context.Entry(speechPart).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SpeechPartExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return View();
         }
 
-        // POST: /SpeechPart
+        // POST: SpeechPart/Create
         [HttpPost]
-        public async Task<ActionResult<SpeechPartResponseDto>> PostSpeechPart(SpeechPartRequestDto dto)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("ID,Name")] SpeechPart speechPart)
         {
-            SpeechPart speechPart = new SpeechPart();
-            speechPart.Name = dto.Name;
-
-            _context.SpeechParts.Add(speechPart);
-            await _context.SaveChangesAsync();
-
-            return new SpeechPartResponseDto(speechPart);
+            if (ModelState.IsValid)
+            {
+                _context.Add(speechPart);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(speechPart);
         }
 
-        // DELETE: /SpeechPart/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSpeechPart(int id)
+        // GET: SpeechPart/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var speechPart = await _context.SpeechParts.FindAsync(id);
             if (speechPart == null)
             {
                 return NotFound();
             }
+            return View(speechPart);
+        }
 
+        // POST: SpeechPart/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name")] SpeechPart speechPart)
+        {
+            if (id != speechPart.ID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(speechPart);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!SpeechPartExists(speechPart.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(speechPart);
+        }
+
+        // GET: SpeechPart/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var speechPart = await _context.SpeechParts
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (speechPart == null)
+            {
+                return NotFound();
+            }
+
+            return View(speechPart);
+        }
+
+        // POST: SpeechPart/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var speechPart = await _context.SpeechParts.FindAsync(id);
             _context.SpeechParts.Remove(speechPart);
             await _context.SaveChangesAsync();
-
-            return NoContent();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool SpeechPartExists(int id)
@@ -108,6 +143,5 @@ namespace english_learning_application.Controllers
             return _context.SpeechParts.Any(e => e.ID == id);
         }
     }
-
 }
 
