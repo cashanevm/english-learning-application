@@ -1,19 +1,12 @@
-﻿
 using System;
-using System.Linq;
-using english_learning_application.Controllers.Dto;
 using english_learning_application.Data;
 using english_learning_application.Models;
-using Humanizer;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace english_learning_application.Controllers
 {
-    [ApiController]
-    [Route("api/translated/sentences")]
-    public class TranslatedSentencesController : ControllerBase
+    public class TranslatedSentencesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
@@ -22,157 +15,139 @@ namespace english_learning_application.Controllers
             _context = context;
         }
 
-        // GET: api/TranslatedSentences
-        [HttpGet]
-        public IEnumerable<TranslatedSentenceResponseDto> GetTranslatedSentences()
+        // GET: TranslatedSentence
+        public async Task<IActionResult> Index()
         {
-            return _context.TranslatedSentences
-                .Include(l => l.Contexts)
+            var translatedSentences = await _context.TranslatedSentences.Include(l => l.Contexts)
                 .Include(l => l.Word)
                 .Include(l => l.Sentence)
-                .Include(l => l.Language)
-                .ToList().Select(x => new TranslatedSentenceResponseDto(x));
+                .Include(l => l.Language).ToListAsync();
+            return View(translatedSentences);
         }
 
-        // GET: api/TranslatedSentences/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TranslatedSentenceResponseDto>> GetTranslatedSentence(int id)
+        // GET: TranslatedSentence/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
-            var translatedSentence = _context.TranslatedSentences
-                .Include(l => l.Contexts)
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var translatedSentence = await _context.TranslatedSentences.Include(l => l.Contexts)
                 .Include(l => l.Word)
                 .Include(l => l.Sentence)
                 .Include(l => l.Language)
-                .FirstOrDefault(x => x.ID == id);
-
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (translatedSentence == null)
             {
                 return NotFound();
             }
 
-            return new TranslatedSentenceResponseDto(translatedSentence);
+            return View(translatedSentence);
         }
 
-        // PUT: api/TranslatedSentences/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTranslatedSentence(int id, TranslatedSentenceRequestDto dto)
+        // GET: TranslatedSentence/Create
+        public IActionResult Create()
         {
-            TranslatedSentence translatedSentence = new TranslatedSentence();
-            translatedSentence.OwnerId = dto.OwnerId;
-            translatedSentence.WordId = dto.WordId;
-            translatedSentence.Translation = dto.Translation;
-            translatedSentence.LanguageId = dto.LanguageId;
-            translatedSentence.SentenceId = dto.SentenceId;
-            translatedSentence.ID = id;
-
-            _context.Entry(translatedSentence).State = EntityState.Modified;
-
-            UpdateRelation(dto, translatedSentence);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TranslatedSentenceExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return View();
         }
 
-
-        // POST: api/TranslatedWords
+        // POST: TranslatedSentence/Create
         [HttpPost]
-        public async Task<IActionResult> PostTranslatedWord(TranslatedSentenceRequestDto dto)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("ID,OwnerId,WordId,SentenceId,LanguageId,Translation")] TranslatedSentence translatedSentence)
         {
-
-            TranslatedSentence translatedSentence = new TranslatedSentence();
-            translatedSentence.OwnerId = dto.OwnerId;
-            translatedSentence.WordId = dto.WordId;
-            translatedSentence.Translation = dto.Translation;
-            translatedSentence.LanguageId = dto.LanguageId;
-            translatedSentence.SentenceId = dto.SentenceId;
-       
-
-            _context.TranslatedSentences.Add(translatedSentence);
-            await _context.SaveChangesAsync();
-
-            UpdateRelation(dto, translatedSentence);
-
-            return CreatedAtAction("GetTranslatedWord", new { id = translatedSentence.ID }, new TranslatedSentenceResponseDto(translatedSentence));
+            if (ModelState.IsValid)
+            {
+                _context.Add(translatedSentence);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(translatedSentence);
         }
 
-        // DELETE: api/TranslatedWords/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTranslatedWord(int id)
+        // GET: TranslatedSentence/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var translatedSentence = await _context.TranslatedSentences.FindAsync(id);
             if (translatedSentence == null)
             {
                 return NotFound();
             }
+            return View(translatedSentence);
+        }
 
+        // POST: TranslatedSentence/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("ID,OwnerId,WordId,SentenceId,LanguageId,Translation")] TranslatedSentence translatedSentence)
+        {
+            if (id != translatedSentence.ID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(translatedSentence);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TranslatedSentenceExists(translatedSentence.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(translatedSentence);
+        }
+
+        // GET: TranslatedSentence/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var translatedSentence = await _context.TranslatedSentences
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (translatedSentence == null)
+            {
+                return NotFound();
+            }
+
+            return View(translatedSentence);
+        }
+
+        // POST: TranslatedSentence/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var translatedSentence = await _context.TranslatedSentences.FindAsync(id);
             _context.TranslatedSentences.Remove(translatedSentence);
             await _context.SaveChangesAsync();
-
-            return NoContent();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool TranslatedSentenceExists(int id)
         {
             return _context.TranslatedSentences.Any(e => e.ID == id);
         }
-
-        private void Modify(TranslatedSentence updatedContext)
-        {
-            _context.Entry(updatedContext).State = EntityState.Modified;
-            _context.TranslatedSentences.Update(updatedContext);
-
-            _context.SaveChanges();
-        }
-
-        private void UpdateRelation(TranslatedSentenceRequestDto dto, TranslatedSentence updatedContext)
-        {
-            TranslatedSentence oldContext = _context.TranslatedSentences
-                .Include(l => l.Contexts)
-                .Include(l => l.Word)
-                .Include(l => l.Sentence)
-                .Include(l => l.Language)
-                .FirstOrDefault(x => x.ID == updatedContext.ID);
-
-            oldContext.Contexts.ForEach(translatedSentences =>
-            {
-                translatedSentences.TranslatedSentences.Remove(oldContext);
-            });
-
-            Modify(updatedContext);
-
-            dto.ContextIds.ForEach(translatedSentenceId =>
-            {
-                Context newTranslatedSentence =
-                _context
-                .Contexts
-                .Include(t => t.TranslatedSentences)
-                .FirstOrDefault(x => x.ID == translatedSentenceId);
-
-                if (newTranslatedSentence != null)
-                {
-                    newTranslatedSentence.TranslatedSentences.Add(updatedContext);
-                    updatedContext.Contexts.Add(newTranslatedSentence);
-                }
-            }
-               );
-
-            Modify(updatedContext);
-        }
     }
-}
 
+}
