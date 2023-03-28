@@ -1,0 +1,50 @@
+﻿@model english_learning_application.Models.TranslatedSentence
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, english_learning_application
+
+<h1>Create</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="OwnerId" class="control-label"></label>
+                <input asp-for="OwnerId" class="form-control" />
+                <span asp-validation-for="OwnerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WordId" class="control-label"></label>
+                <select asp-for="WordId" asp-items="@(new SelectList(ViewBag.Words, "Id", "OriginalWord"))" class="form-control"></select>
+                <span asp-validation-for="WordId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SentenceId" class="control-label"></label>
+                <select asp-for="SentenceId" asp-items="@(new SelectList(ViewBag.Sentences, "Id", "OriginalSentence"))" class="form-control"></select>
+                <span asp-validation-for="SentenceId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LanguageId" class="control-label"></label>
+                <select asp-for="LanguageId" asp-items="@(new SelectList(ViewBag.Languages, "Id", "Key"))" class="form-control"></select>
+                <span asp-validation-for="LanguageId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Translation" class="control-label"></label>
+                <input asp-for="Translation" class="form-control" />
+                <span asp-validation-for="Translation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -2,30 +2,31 @@
 using english_learning_application.Data;
 using english_learning_application.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace english_learning_application.Controllers
 {
-    public class TranslatedSentencesController : Controller
+	public class DisplayWordController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public TranslatedSentencesController(ApplicationDbContext context)
+        public DisplayWordController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: TranslatedSentence
+        // GET: DisplayWord
         public async Task<IActionResult> Index()
         {
-            var translatedSentences = await _context.TranslatedSentences.Include(l => l.Contexts)
-                .Include(l => l.Word)
-                .Include(l => l.Sentence)
-                .Include(l => l.Language).ToListAsync();
-            return View(translatedSentences);
+            var displayWords = await _context.DisplayWords
+                .Include(d => d.Word)
+                .ToListAsync();
+
+            return View(displayWords);
         }
 
-        // GET: TranslatedSentence/Details/5
+        // GET: DisplayWord/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,40 +34,45 @@ namespace english_learning_application.Controllers
                 return NotFound();
             }
 
-            var translatedSentence = await _context.TranslatedSentences.Include(l => l.Contexts)
-                .Include(l => l.Word)
-                .Include(l => l.Sentence)
-                .Include(l => l.Language)
+            var displayWord = await _context.DisplayWords
+                .Include(d => d.Word)
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (translatedSentence == null)
+
+            if (displayWord == null)
             {
                 return NotFound();
             }
 
-            return View(translatedSentence);
+            return View(displayWord);
         }
 
-        // GET: TranslatedSentence/Create
+        // GET: DisplayWord/Create
         public IActionResult Create()
         {
+            ViewData["Words"] = _context.Words.Select(w => new SelectListItem { Value = w.ID.ToString(), Text = w.OriginalWord });
+
             return View();
         }
 
-        // POST: TranslatedSentence/Create
+        // POST: DisplayWord/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,OwnerId,WordId,SentenceId,LanguageId,Translation")] TranslatedSentence translatedSentence)
+        public async Task<IActionResult> Create([Bind("ID,WordId,Display")] DisplayWord displayWord)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(translatedSentence);
+                _context.Add(displayWord);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(translatedSentence);
+
+            ViewData["Words"] = _context.Words.Select(w => new SelectListItem { Value = w.ID.ToString(), Text = w.OriginalWord });
+
+            return View(displayWord);
         }
 
-        // GET: TranslatedSentence/Edit/5
+        // GET: DisplayWord/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,20 +80,25 @@ namespace english_learning_application.Controllers
                 return NotFound();
             }
 
-            var translatedSentence = await _context.TranslatedSentences.FindAsync(id);
-            if (translatedSentence == null)
+            var displayWord = await _context.DisplayWords.FindAsync(id);
+
+            if (displayWord == null)
             {
                 return NotFound();
             }
-            return View(translatedSentence);
+
+            ViewData["Words"] = _context.Words.Select(w => new SelectListItem { Value = w.ID.ToString(), Text = w.OriginalWord });
+              
+
+            return View(displayWord);
         }
 
-        // POST: TranslatedSentence/Edit/5
+        // POST: DisplayWord/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,OwnerId,WordId,SentenceId,LanguageId,Translation")] TranslatedSentence translatedSentence)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,WordId,Display")] DisplayWord displayWord)
         {
-            if (id != translatedSentence.ID)
+            if (id != displayWord.ID)
             {
                 return NotFound();
             }
@@ -96,12 +107,12 @@ namespace english_learning_application.Controllers
             {
                 try
                 {
-                    _context.Update(translatedSentence);
+                    _context.Update(displayWord);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TranslatedSentenceExists(translatedSentence.ID))
+                    if (!DisplayWordExists(displayWord.ID))
                     {
                         return NotFound();
                     }
@@ -110,12 +121,16 @@ namespace english_learning_application.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(translatedSentence);
+
+            ViewData["Words"] = _context.Words.Select(w => new SelectListItem { Value = w.ID.ToString(), Text = w.OriginalWord });
+
+            return View(displayWord);
         }
 
-        // GET: TranslatedSentence/Delete/5
+        // GET: DisplayWord/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,33 +138,38 @@ namespace english_learning_application.Controllers
                 return NotFound();
             }
 
-            var translatedSentence = await _context.TranslatedSentences
+            var displayWord = await _context.DisplayWords
+                .Include(d => d.Word)
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (translatedSentence == null)
+
+            if (displayWord == null)
             {
                 return NotFound();
             }
 
-            return View(translatedSentence);
+            return View(displayWord);
         }
 
-        // POST: TranslatedSentence/Delete/5
+        // POST: DisplayWord/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var translatedSentence = await _context.TranslatedSentences.FindAsync(id);
-            _context.TranslatedSentences.Remove(translatedSentence);
+            var displayWord = await _context.DisplayWords.FindAsync(id);
+            if (displayWord == null)
+            {
+                return NotFound();
+            }
+
+            _context.DisplayWords.Remove(displayWord);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TranslatedSentenceExists(int id)
+        private bool DisplayWordExists(int id)
         {
-            return _context.TranslatedSentences.Any(e => e.ID == id);
+            return _context.DisplayWords.Any(e => e.ID == id);
         }
     }
-
 }
-
 

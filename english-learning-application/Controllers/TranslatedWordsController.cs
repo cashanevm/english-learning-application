@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Linq;
-using english_learning_application.Controllers.Dto;
 using english_learning_application.Data;
 using english_learning_application.Models;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace english_learning_application.Controllers
 {
-    [Route("api/translated/words")]
-    [ApiController]
-    public class TranslatedWordsController : ControllerBase
+	public class TranslatedWordsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
@@ -20,160 +16,151 @@ namespace english_learning_application.Controllers
             _context = context;
         }
 
-        // GET: api/TranslatedWords
-        [HttpGet]
-        public  IActionResult GetTranslatedWords()
+        // GET: TranslatedWords
+        public IActionResult Index()
         {
-            var translatedWords = _context.TranslatedWords
-                   .Include(l => l.Contexts)
-                   .Include(l => l.Word)
-                   .Include(l => l.Language)
-                   .Include(l => l.SpeechPart)
-                .ToList().Select(x => new TranslatedWordResponseDto(x));
-
-            return Ok(translatedWords);
+            return View(_context.TranslatedWords.ToList());
         }
 
-        // GET: api/TranslatedWords/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetTranslatedWord(int id)
+        // GET: TranslatedWords/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
-            var translatedWord = _context.TranslatedWords
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-                   .Include(l => l.Contexts)
-                   .Include(l => l.Word)
-                   .Include(l => l.Language)
-                   .Include(l => l.SpeechPart)
-                .FirstOrDefault(x => x.ID == id);
-
+            var translatedWord = await _context.TranslatedWords
+                .Include(t => t.Word)
+                .Include(t => t.Language)
+                .Include(t => t.SpeechPart)
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (translatedWord == null)
             {
                 return NotFound();
             }
 
-            return Ok(new TranslatedWordResponseDto(translatedWord));
+            return View(translatedWord);
         }
 
-        // PUT: api/TranslatedWords/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTranslatedWord(int id, TranslatedWordRequestDto dto)
+        // GET: TranslatedWords/Create
+        public IActionResult Create()
         {
-            TranslatedWord translatedWord = new TranslatedWord();
-            translatedWord.OwnerId = dto.OwnerId;
-                translatedWord.WordId = dto.WordId;
-            translatedWord.Translation = dto.Translation;
-            translatedWord.LanguageId = dto.LanguageId;
-            translatedWord.SpeechPartId = dto.SpeechPartId;
-            translatedWord.ID = id;
-
-
-
-            _context.Entry(translatedWord).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-
-                UpdateRelation(dto, translatedWord);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TranslatedWordExists(id))
-                {
-                    return NotFound();
-                }
-
-                throw;
-            }
-
-            return NoContent();
+            ViewData["LanguageId"] = new SelectList(_context.Languages, "ID", "Name");
+            ViewData["SpeechPartId"] = new SelectList(_context.SpeechParts, "ID", "Name");
+            ViewData["WordId"] = new SelectList(_context.Words, "ID", "Text");
+            return View();
         }
 
-        // POST: api/TranslatedWords
+        // POST: TranslatedWords/Create
         [HttpPost]
-        public async Task<IActionResult> PostTranslatedWord(TranslatedWordRequestDto dto)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("ID,OwnerId,WordId,Translation,LanguageId,SpeechPartId")] TranslatedWord translatedWord)
         {
-            TranslatedWord translatedWord = new TranslatedWord();
-            translatedWord.OwnerId = dto.OwnerId;
-            translatedWord.WordId = dto.WordId;
-            translatedWord.Translation = dto.Translation;
-            translatedWord.LanguageId = dto.LanguageId;
-            translatedWord.SpeechPartId = dto.SpeechPartId;
-
-
-            _context.TranslatedWords.Add(translatedWord);
-            await _context.SaveChangesAsync();
-
-            UpdateRelation(dto, translatedWord);
-
-
-            return CreatedAtAction("GetTranslatedWord", new { id = translatedWord.ID }, new TranslatedWordResponseDto(translatedWord));
+            if (ModelState.IsValid)
+            {
+                _context.Add(translatedWord);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["LanguageId"] = new SelectList(_context.Languages, "ID", "Name", translatedWord.LanguageId);
+            ViewData["SpeechPartId"] = new SelectList(_context.SpeechParts, "ID", "Name", translatedWord.SpeechPartId);
+            ViewData["WordId"] = new SelectList(_context.Words, "ID", "Text", translatedWord.WordId);
+            return View(translatedWord);
         }
 
-        // DELETE: api/TranslatedWords/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTranslatedWord(int id)
+        // GET: TranslatedWords/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var translatedWord = await _context.TranslatedWords.FindAsync(id);
             if (translatedWord == null)
             {
                 return NotFound();
             }
+            ViewData["LanguageId"] = new SelectList(_context.Languages, "ID", "Name", translatedWord.LanguageId);
+            ViewData["SpeechPartId"] = new SelectList(_context.SpeechParts, "ID", "Name", translatedWord.SpeechPartId);
+            ViewData["WordId"] = new SelectList(_context.Words, "ID", "Text", translatedWord.WordId);
+            return View(translatedWord);
+        }
 
+        // POST: TranslatedWords/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("ID,OwnerId,WordId,Translation,LanguageId,SpeechPartId")] TranslatedWord translatedWord)
+        {
+            if (id != translatedWord.ID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(translatedWord);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TranslatedWordExists(translatedWord.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["LanguageId"] = new SelectList(_context.Languages, "ID", "Name", translatedWord.LanguageId);
+            ViewData["SpeechPartId"] = new SelectList(_context.SpeechParts, "ID", "Name", translatedWord.SpeechPartId);
+            ViewData["WordId"] = new SelectList(_context.Words, "ID", "Text", translatedWord.WordId);
+            return View(translatedWord);
+        }
+
+        // GET: TranslatedWords/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var translatedWord = await _context.TranslatedWords
+                .Include(t => t.Word)
+                .Include(t => t.Language)
+                .Include(t => t.SpeechPart)
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (translatedWord == null)
+            {
+                return NotFound();
+            }
+
+            return View(translatedWord);
+        }
+
+        // POST: TranslatedWords/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var translatedWord = await _context.TranslatedWords.FindAsync(id);
             _context.TranslatedWords.Remove(translatedWord);
             await _context.SaveChangesAsync();
-
-            return NoContent();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool TranslatedWordExists(int id)
         {
             return _context.TranslatedWords.Any(e => e.ID == id);
         }
-
-        private void Modify(TranslatedWord updatedContext)
-        {
-            _context.Entry(updatedContext).State = EntityState.Modified;
-            _context.TranslatedWords.Update(updatedContext);
-
-            _context.SaveChanges();
-        }
-
-        private void UpdateRelation(TranslatedWordRequestDto dto, TranslatedWord updatedContext)
-        {
-            TranslatedWord oldContext = _context.TranslatedWords
-
-                   .Include(l => l.Contexts)
-                   .Include(l => l.Word)
-                   .Include(l => l.Language)
-                   .Include(l => l.SpeechPart)
-                .FirstOrDefault(x => x.ID == updatedContext.ID);
-
-            oldContext.Contexts.ForEach(translatedSentences =>
-            {
-                translatedSentences.TranslatedWords.Remove(oldContext);
-            });
-
-            Modify(updatedContext);
-
-            dto.ContextIds.ForEach(translatedSentenceId =>
-            {
-                Context newTranslatedSentence =
-                _context
-                .Contexts
-                .Include(t => t.TranslatedWords)
-                .FirstOrDefault(x => x.ID == translatedSentenceId);
-
-                if (newTranslatedSentence != null)
-                {
-                    newTranslatedSentence.TranslatedWords.Add(updatedContext);
-                    updatedContext.Contexts.Add(newTranslatedSentence);
-                }
-            }
-               );
-
-            Modify(updatedContext);
-        }
     }
 }
+
 

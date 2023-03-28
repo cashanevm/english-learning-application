@@ -1,0 +1,36 @@
+﻿@model IEnumerable<english_learning_application.Models.Tag>
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, english_learning_application
+
+<h2>Tags</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Words</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tag in Model)
+        {
+            <tr>
+                <td>@tag.ID</td>
+                <td>@tag.Name</td>
+                <td>@string.Join(", ", tag.Words.Select(w => w.OriginalWord))</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@tag.ID">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@tag.ID">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@tag.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

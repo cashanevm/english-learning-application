@@ -6,26 +6,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace english_learning_application.Controllers
 {
-    public class TranslatedSentencesController : Controller
+	public class LanguageController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public TranslatedSentencesController(ApplicationDbContext context)
+        public LanguageController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: TranslatedSentence
+        // GET: Language
         public async Task<IActionResult> Index()
         {
-            var translatedSentences = await _context.TranslatedSentences.Include(l => l.Contexts)
-                .Include(l => l.Word)
-                .Include(l => l.Sentence)
-                .Include(l => l.Language).ToListAsync();
-            return View(translatedSentences);
+            return View(await _context.Languages.ToListAsync());
         }
 
-        // GET: TranslatedSentence/Details/5
+        // GET: Language/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,40 +29,40 @@ namespace english_learning_application.Controllers
                 return NotFound();
             }
 
-            var translatedSentence = await _context.TranslatedSentences.Include(l => l.Contexts)
-                .Include(l => l.Word)
-                .Include(l => l.Sentence)
-                .Include(l => l.Language)
+            var language = await _context.Languages
+                .Include(l => l.TranslatedWords)
+                .Include(l => l.Tests)
+                .Include(l => l.TranslatedSentences)
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (translatedSentence == null)
+            if (language == null)
             {
                 return NotFound();
             }
 
-            return View(translatedSentence);
+            return View(language);
         }
 
-        // GET: TranslatedSentence/Create
+        // GET: Language/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: TranslatedSentence/Create
+        // POST: Language/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,OwnerId,WordId,SentenceId,LanguageId,Translation")] TranslatedSentence translatedSentence)
+        public async Task<IActionResult> Create([Bind("ID,Key")] Language language)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(translatedSentence);
+                _context.Add(language);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(translatedSentence);
+            return View(language);
         }
 
-        // GET: TranslatedSentence/Edit/5
+        // GET: Language/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,20 +70,20 @@ namespace english_learning_application.Controllers
                 return NotFound();
             }
 
-            var translatedSentence = await _context.TranslatedSentences.FindAsync(id);
-            if (translatedSentence == null)
+            var language = await _context.Languages.FindAsync(id);
+            if (language == null)
             {
                 return NotFound();
             }
-            return View(translatedSentence);
+            return View(language);
         }
 
-        // POST: TranslatedSentence/Edit/5
+        // POST: Language/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,OwnerId,WordId,SentenceId,LanguageId,Translation")] TranslatedSentence translatedSentence)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Key")] Language language)
         {
-            if (id != translatedSentence.ID)
+            if (id != language.ID)
             {
                 return NotFound();
             }
@@ -96,12 +92,12 @@ namespace english_learning_application.Controllers
             {
                 try
                 {
-                    _context.Update(translatedSentence);
+                    _context.Update(language);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TranslatedSentenceExists(translatedSentence.ID))
+                    if (!LanguageExists(language.ID))
                     {
                         return NotFound();
                     }
@@ -112,10 +108,10 @@ namespace english_learning_application.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(translatedSentence);
+            return View(language);
         }
 
-        // GET: TranslatedSentence/Delete/5
+        // GET: Language/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,33 +119,31 @@ namespace english_learning_application.Controllers
                 return NotFound();
             }
 
-            var translatedSentence = await _context.TranslatedSentences
+            var language = await _context.Languages
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (translatedSentence == null)
+            if (language == null)
             {
                 return NotFound();
             }
 
-            return View(translatedSentence);
+            return View(language);
         }
 
-        // POST: TranslatedSentence/Delete/5
+        // POST: Language/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var translatedSentence = await _context.TranslatedSentences.FindAsync(id);
-            _context.TranslatedSentences.Remove(translatedSentence);
+            var language = await _context.Languages.FindAsync(id);
+            _context.Languages.Remove(language);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TranslatedSentenceExists(int id)
+        private bool LanguageExists(int id)
         {
-            return _context.TranslatedSentences.Any(e => e.ID == id);
+            return _context.Languages.Any(e => e.ID == id);
         }
     }
-
 }
-
 

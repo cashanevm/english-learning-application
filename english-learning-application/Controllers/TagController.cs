@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Linq;
-using english_learning_application.Controllers.Dto;
 using english_learning_application.Data;
 using english_learning_application.Models;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace english_learning_application.Controllers
 {
-    [Route("api/tags")]
-    [ApiController]
-    public class TagController : ControllerBase
+	public class TagController : Controller
     {
         private readonly ApplicationDbContext _context;
 
@@ -20,95 +15,142 @@ namespace english_learning_application.Controllers
             _context = context;
         }
 
-        // GET: api/Tag
-        [HttpGet]
-        public IEnumerable<TagResponseDto> GetTags()
+        // GET: /Tag
+        public IActionResult Index()
         {
-            return _context.Tags
-                .Include(l => l.Words)
-                .ToList().Select(x => new TagResponseDto(x));
+            var tags = _context.Tags.ToList();
+            return View(tags);
         }
 
-        // GET: api/Tag/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TagResponseDto>> GetTag(int id)
+        // GET: /Tag/Details/5
+        public IActionResult Details(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var tag = _context.Tags
                 .Include(l => l.Words)
-                .FirstOrDefault(x => x.ID == id); ;
+                .FirstOrDefault(t => t.ID == id);
 
             if (tag == null)
             {
                 return NotFound();
             }
 
-            return new TagResponseDto(tag);
+            return View(tag);
         }
 
-        // PUT: api/Tag/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTag(int id, TagRequestDto dto)
+        // GET: /Tag/Create
+        public IActionResult Create()
         {
-            Tag tag = new Tag();
-
-            tag.Name = dto.Name;
-            tag.ID = id;
-
-            _context.Entry(tag).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TagExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            ViewData["Words"] = _context.Words.ToList();
+            return View();
         }
 
-        // POST: api/Tag
+        // POST: /Tag/Create
         [HttpPost]
-        public async Task<ActionResult<TagResponseDto>> PostTag(TagRequestDto dto)
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Tag tag)
         {
-
-            Tag tag = new Tag();
-
-            tag.Name = dto.Name;
-       
-            _context.Tags.Add(tag);
-            await _context.SaveChangesAsync();
-
-            return  CreatedAtAction("GetTag", new { id = tag.ID }, new TagResponseDto(tag));
+            if (ModelState.IsValid)
+            {
+                _context.Tags.Add(tag);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(tag);
         }
 
-        // DELETE: api/Tag/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTag(int id)
+        // GET: /Tag/Edit/5
+        public IActionResult Edit(int? id)
         {
-            var tag = await _context.Tags.FindAsync(id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tag = _context.Tags
+                .Include(l => l.Words)
+                .FirstOrDefault(t => t.ID == id);
+
+
+
+            
+
             if (tag == null)
             {
                 return NotFound();
             }
 
-            _context.Tags.Remove(tag);
-            await _context.SaveChangesAsync();
+            ViewData["Words"] = _context.Words.ToList();
 
-            return NoContent();
+            return View(tag);
         }
 
-        private bool TagExists(int id)
+        // POST: /Tag/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Tag tag)
         {
-            return _context.Tags.Any(e => e.ID == id);
+            if (id != tag.ID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Tags.Update(tag);
+                _context.SaveChanges();
+
+                //tag.Words.Select(word =>
+                //{
+                //    Word newWord = _context.Words.FirstOrDefault(s => s.ID == word.ID);
+                //    if (newWord != null)
+                //    {
+                //        newWord.Tags.Add(tag);
+                //        _context.SaveChanges();
+                //    }
+
+                //    return newWord;
+                //});
+
+                
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(tag);
+        }
+
+        // GET: /Tag/Delete/5
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var tag = _context.Tags.FirstOrDefault(t => t.ID == id);
+
+            if (tag == null)
+            {
+                return NotFound();
+            }
+
+            return View(tag);
+        }
+
+        // POST: /Tag/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var tag = _context.Tags.FirstOrDefault(t => t.ID == id);
+            _context.Tags.Remove(tag);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
