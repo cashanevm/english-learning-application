@@ -16,17 +16,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="WordId" class="control-label"></label>
-                <select asp-for="WordId" asp-items="@(new SelectList(ViewBag.Words, "Id", "OriginalWord"))" class="form-control"></select>
+                <select asp-for="WordId" asp-items="@(new SelectList(ViewBag.Words, "ID", "OriginalWord"))" class="form-control"></select>
                 <span asp-validation-for="WordId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SentenceId" class="control-label"></label>
-                <select asp-for="SentenceId" asp-items="@(new SelectList(ViewBag.Sentences, "Id", "OriginalSentence"))" class="form-control"></select>
+                <select asp-for="SentenceId" asp-items="@(new SelectList(ViewBag.Sentences, "ID", "OriginalSentence"))" class="form-control"></select>
                 <span asp-validation-for="SentenceId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LanguageId" class="control-label"></label>
-                <select asp-for="LanguageId" asp-items="@(new SelectList(ViewBag.Languages, "Id", "Key"))" class="form-control"></select>
+                <select asp-for="LanguageId" asp-items="@(new SelectList(ViewBag.Languages, "ID", "Key"))" class="form-control"></select>
                 <span asp-validation-for="LanguageId" class="text-danger"></span>
             </div>
             <div class="form-group">

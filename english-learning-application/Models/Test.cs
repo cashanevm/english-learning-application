@@ -11,10 +11,13 @@ namespace english_learning_application.Models
 
         public int ID { get; set; }
 
+        [Required]
         public int TimePerWord { get; set; }
 
+        [Required]
         public int OwnerId { get; set; }
 
+        [Required]
         public int Options { get; set; }
 
         //many Test to many Word

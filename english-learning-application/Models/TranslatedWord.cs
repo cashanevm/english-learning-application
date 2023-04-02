@@ -13,6 +13,7 @@ namespace english_learning_application.Models
         //many TranslatedWord to many Contexts
         public List<Context> Contexts { get; set; }
 
+        [Required]
         public int OwnerId { get; set; }
 
         //foreign key
@@ -21,6 +22,7 @@ namespace english_learning_application.Models
         public Word Word { get; set; }
 
         //unic key
+        [Required]
         public string Translation { get; set; }
 
         //foreign key

@@ -50,6 +50,9 @@ namespace english_learning_application.Controllers
         // GET: Words/Create
         public IActionResult Create()
         {
+
+            ViewData["Tags"] = _context.Tags.ToList();
+
             return View();
         }
 

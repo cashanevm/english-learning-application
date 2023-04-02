@@ -58,7 +58,12 @@ namespace english_learning_application.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(context);
-                _context.SaveChanges();
+                ;
+
+                if (_context.SaveChanges() != 1) {
+                    return BadRequest();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(context);

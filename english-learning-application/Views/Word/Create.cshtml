@@ -26,6 +26,8 @@
                     <option value="@tag.ID">@tag.Name</option>
                 }
             </select>
+            @Html.ValidationMessageFor(model => model.Tags, "", new { @class = "text-danger" })
+
         </div>
     </div>
 
@@ -39,3 +41,7 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -30,7 +30,7 @@
                     }
                     else
                     {
-                        <option value="@tag.ID" >@tag.Name</option>
+                        <option value="@tag.ID">@tag.Name</option>
                     }
 
 
@@ -50,3 +50,7 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

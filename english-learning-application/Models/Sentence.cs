@@ -28,6 +28,7 @@ namespace english_learning_application.Models
         public Word Word { get; set; }
 
         //unic key
+        [Required]
         public string OriginalSentence { get; set; }
 
         public Sentence()
