@@ -1,0 +1,29 @@
+﻿@model english_learning_application.Models.DisplaySentence
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, english_learning_application
+
+<h2>Details</h2>
+
+<div>
+    <h4>DisplaySentence</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Display)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Display)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Sentence.OriginalSentence)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Sentence.OriginalSentence)
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
