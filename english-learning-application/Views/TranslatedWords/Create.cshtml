@@ -1,0 +1,52 @@
+@model english_learning_application.Models.TranslatedWord
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, english_learning_application
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="WordId" class="control-label"></label>
+                <select asp-for="WordId" asp-items="@ViewBag.Words" class="form-control"></select>
+                <span asp-validation-for="WordId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LanguageId" class="control-label"></label>
+                <select asp-for="LanguageId" asp-items="@ViewBag.Languages" class="form-control"></select>
+                <span asp-validation-for="LanguageId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SpeechPartId" class="control-label"></label>
+                <select asp-for="SpeechPartId" asp-items="@ViewBag.SpeechParts" class="form-control"></select>
+                <span asp-validation-for="SpeechPartId" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Translation" class="control-label"></label>
+                <input asp-for="Translation" class="form-control" />
+                <span asp-validation-for="Translation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

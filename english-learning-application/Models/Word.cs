@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Server.IIS.Core;
+using Microsoft.AspNetCore.Server.IIS.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
@@ -31,6 +31,7 @@ namespace english_learning_application.Models
         public List<Test> Tests { get; set; }
 
         //unic key
+        [Required]
         public string OriginalWord { get; set; }
 
         public Word()
