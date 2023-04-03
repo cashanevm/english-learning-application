@@ -8,7 +8,7 @@ namespace english_learning_application.Models
 {
     [PrimaryKey(nameof(ID))]
     public class Sentence
-	{
+    {
         public int ID { get; set; }
 
         //many Sentence to many Context
@@ -28,6 +28,7 @@ namespace english_learning_application.Models
         public Word Word { get; set; }
 
         //unic key
+        [Required]
         public string OriginalSentence { get; set; }
 
         public Sentence()

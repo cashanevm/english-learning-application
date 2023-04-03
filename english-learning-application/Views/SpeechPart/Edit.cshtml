@@ -17,3 +17,7 @@
     </div>
     <input type="hidden" asp-for="ID" />
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

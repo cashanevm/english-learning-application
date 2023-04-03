@@ -9,6 +9,7 @@ namespace english_learning_application.Models
         public int ID { get; set; }
 
         //unic key
+        [Required]
         public string Name { get; set; }
 
         //one SpeechPart to many TranslatedWord
