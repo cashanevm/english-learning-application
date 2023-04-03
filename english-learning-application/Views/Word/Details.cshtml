@@ -1,0 +1,126 @@
+@model english_learning_application.Models.Word
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, english_learning_application
+
+
+<h2>Word Details</h2>
+
+<div>
+    <h4>Word</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.OriginalWord)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.OriginalWord)
+        </dd>
+    </dl>
+</div>
+<div>
+    <h4>Tags</h4>
+    <hr />
+    @if (Model.Tags.Count > 0)
+    {
+        <ul>
+            @foreach (var tag in Model.Tags)
+            {
+                <li>@tag.Name</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No tags found for this word.</p>
+    }
+</div>
+<div>
+    <h4>Display Words</h4>
+    <hr />
+    @if (Model.DisplayWords.Count > 0)
+    {
+        <ul>
+            @foreach (var displayWord in Model.DisplayWords)
+            {
+                <li>@displayWord.Display</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No display words found for this word.</p>
+    }
+</div>
+<div>
+    <h4>Sentences</h4>
+    <hr />
+    @if (Model.Sentences.Count > 0)
+    {
+        <ul>
+            @foreach (var sentence in Model.Sentences)
+            {
+                <li>@sentence.OriginalSentence</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No sentences found for this word.</p>
+    }
+</div>
+<div>
+    <h4>Translated Sentences</h4>
+    <hr />
+    @if (Model.TranslatedSentences.Count > 0)
+    {
+        <ul>
+            @foreach (var translatedSentence in Model.TranslatedSentences)
+            {
+                <li>@translatedSentence.Translation</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No translated sentences found for this word.</p>
+    }
+</div>
+<div>
+    <h4>Translated Words</h4>
+    <hr />
+    @if (Model.TranslatedWords.Count > 0)
+    {
+        <ul>
+            @foreach (var translatedWord in Model.TranslatedWords)
+            {
+                <li>@translatedWord.Word.OriginalWord - @translatedWord.Language</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No translated words found for this word.</p>
+    }
+</div>
+<div>
+    <h4>Tests</h4>
+    <hr />
+    @if (Model.Tests.Count > 0)
+    {
+        <ul>
+            @foreach (var test in Model.Tests)
+            {
+                <li>@test.Options</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No tests found for this word.</p>
+    }
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    <a href="@Url.Action("Index", "Word")">Back to List</a>
+</p>
