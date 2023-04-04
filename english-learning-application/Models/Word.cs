@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Server.IIS.Core;
+using Microsoft.AspNetCore.Server.IIS.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
