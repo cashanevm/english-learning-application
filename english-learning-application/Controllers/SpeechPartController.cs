@@ -142,6 +142,13 @@ namespace english_learning_application.Controllers
         {
             return _context.SpeechParts.Any(e => e.ID == id);
         }
+
+        [HttpGet]
+        public JsonResult IsNameUnique(int ID, string Name)
+        {
+            var isUnique = !_context.SpeechParts.Any(s => s.ID != ID && s.Name == Name);
+            return Json(isUnique);
+        }
     }
 }
 

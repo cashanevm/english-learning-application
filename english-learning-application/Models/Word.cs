@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.IIS.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -31,7 +32,10 @@ namespace english_learning_application.Models
         public List<Test> Tests { get; set; }
 
         //unic key
-        [Required]
+        [Required(ErrorMessage = "The original word is required.")]
+        [StringLength(50, MinimumLength = 1, ErrorMessage = "The original word must be between 1 and 50 characters.")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "The original word can only contain letters.")]
+        [Remote("IsOriginalWordUnique", "Word", AdditionalFields = "ID", ErrorMessage = "The original word is not unique.")]
         public string OriginalWord { get; set; }
 
         public Word()

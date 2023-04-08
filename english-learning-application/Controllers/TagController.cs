@@ -104,20 +104,6 @@ namespace english_learning_application.Controllers
                 _context.Tags.Update(tag);
                 _context.SaveChanges();
 
-                //tag.Words.Select(word =>
-                //{
-                //    Word newWord = _context.Words.FirstOrDefault(s => s.ID == word.ID);
-                //    if (newWord != null)
-                //    {
-                //        newWord.Tags.Add(tag);
-                //        _context.SaveChanges();
-                //    }
-
-                //    return newWord;
-                //});
-
-                
-
                 return RedirectToAction(nameof(Index));
             }
 
@@ -151,6 +137,13 @@ namespace english_learning_application.Controllers
             _context.Tags.Remove(tag);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public JsonResult IsNameUnique(int ID, string Name)
+        {
+            var isUnique = !_context.Tags.Any(t => t.ID != ID && t.Name == Name);
+            return Json(isUnique);
         }
     }
 }

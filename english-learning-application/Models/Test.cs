@@ -11,13 +11,15 @@ namespace english_learning_application.Models
 
         public int ID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Time per word is required.")]
+        [Range(1, 60, ErrorMessage = "Time per word must be between 1 and 60 seconds.")]
         public int TimePerWord { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Owner ID is required.")]
         public int OwnerId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Number of options is required.")]
+        [Range(2, 10, ErrorMessage = "Number of options must be between 2 and 10.")]
         public int Options { get; set; }
 
         //many Test to many Word

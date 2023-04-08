@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Net;
 using english_learning_application.Data;
 using english_learning_application.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+//using Newtonsoft.Json;
+//using Newtonsoft.Json.Serialization;
 
 namespace english_learning_application.Controllers
 {
@@ -60,9 +63,7 @@ namespace english_learning_application.Controllers
                 _context.Add(context);
                 ;
 
-                if (_context.SaveChanges() != 1) {
-                    return BadRequest();
-                }
+                _context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -154,6 +155,29 @@ namespace english_learning_application.Controllers
         private bool ContextExists(int id)
         {
             return _context.Contexts.Any(c => c.ID == id);
+        }
+
+        //[HttpGet]
+        //public JsonResult IsNameValid(string name)
+        //{
+        //    bool isValid = !_context.Contexts.Any(c => c.Name == name);
+
+        //    if (isValid)
+        //    {
+        //        return Json(true);
+        //    }
+        //    else
+        //    {
+        //        string errorMessage = "The name already exists.";
+        //        return Json(errorMessage);
+        //    }
+        //}
+
+        [HttpGet]
+        public JsonResult IsNameUnique(int ID, string Name)
+        {
+            var isUnique = !_context.Contexts.Any(c => c.ID != ID && c.Name == Name);
+            return Json(isUnique);
         }
     }
 }

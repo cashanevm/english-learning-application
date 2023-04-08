@@ -59,14 +59,29 @@ namespace english_learning_application.Controllers
         // POST: TranslatedSentence/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,OwnerId,WordId,SentenceId,LanguageId,Translation")] TranslatedSentence translatedSentence)
+        public async Task<IActionResult> Create([Bind("OwnerId,WordId,SentenceId,LanguageId,Translation")] TranslatedSentence translatedSentence)
         {
-            if (ModelState.IsValid)
+
+            var sentence = await _context.Sentences.FirstOrDefaultAsync(m => m.ID == translatedSentence.SentenceId);
+            var language = await _context.Languages.FirstOrDefaultAsync(m => m.ID == translatedSentence.LanguageId);
+            var word = await _context.Words.FirstOrDefaultAsync(m => m.ID == translatedSentence.WordId);
+
+
+            if (sentence!= null && language!=null && word!= null)
             {
+                translatedSentence.Sentence = sentence;
+                translatedSentence.Language = language;
+                translatedSentence.Word = word;
+
+
                 _context.Add(translatedSentence);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewData["Words"] = _context.Words.ToList();
+            ViewData["Sentences"] = _context.Sentences.ToList();
+            ViewData["Languages"] = _context.Languages.ToList();
             return View(translatedSentence);
         }
 
@@ -155,6 +170,13 @@ namespace english_learning_application.Controllers
         private bool TranslatedSentenceExists(int id)
         {
             return _context.TranslatedSentences.Any(e => e.ID == id);
+        }
+
+        [HttpGet]
+        public JsonResult IsTranslationUnique(int ID, string Translation)
+        {
+            var isUnique = !_context.TranslatedSentences.Any(t => t.ID != ID && t.Translation == Translation);
+            return Json(isUnique);
         }
     }
 

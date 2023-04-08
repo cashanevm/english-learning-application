@@ -180,6 +180,13 @@ namespace english_learning_application.Controllers
         {
             return _context.Words.Any(e => e.ID == id);
         }
+
+        [HttpGet]
+        public JsonResult IsOriginalWordUnique(int ID, string OriginalWord)
+        {
+            var isUnique = !_context.Words.Any(w => w.ID != ID && w.OriginalWord == OriginalWord);
+            return Json(isUnique);
+        }
     }
 }
 
