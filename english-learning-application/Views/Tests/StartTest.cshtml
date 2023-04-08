@@ -1,0 +1,49 @@
+﻿
+@{
+    Layout = null;
+}
+
+@model bool
+
+<style>
+    .container {
+        background-color: #f9f9f9;
+        padding: 20px;
+    }
+
+    h2 {
+        font-weight: bold;
+        font-size: 24px;
+    }
+
+    .correct {
+        color: green;
+    }
+
+    .incorrect {
+        color: red;
+    }
+
+    p {
+        font-size: 18px;
+    }
+</style>
+
+<div class="container">
+    @if (Model)
+    {
+        <h2 class="correct">Correct!</h2>
+    }
+    else
+    {
+        <h2 class="incorrect">Incorrect.
+            @if (ViewBag.Message !=null) {
+                    @ViewBag.Message
+                }
+
+
+    </h2>
+    }
+
+    <p>"@ViewBag.originalWord" translation is "@ViewBag.translationWord".</p>
+</div>

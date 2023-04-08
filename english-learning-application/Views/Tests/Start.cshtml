@@ -1,0 +1,226 @@
+﻿
+@model english_learning_application.Models.Test
+
+@using english_learning_application.Models;
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, english_learning_application
+
+@{
+    var totalSeconds = Model.TimePerWord * Model.Words.Count;
+}
+
+<style>
+
+    /* Style for form elements */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+        margin-right: 0.5rem;
+    }
+
+    button[type="submit"] {
+        margin-top: 1rem;
+    }
+
+    /* Style for form layout */
+    form {
+        max-width: 600px;
+        margin: auto;
+        padding: 2rem;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+    }
+
+    h5 {
+        margin-top: 0;
+        font-weight: bold;
+    }
+
+    /* Style for form feedback */
+    .alert {
+        margin-top: 1rem;
+        padding: 0.5rem;
+        border-radius: 5px;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    input[type="radio"] {
+        width: 3em;
+        height: 3em;
+        vertical-align: middle;
+    }
+
+    button-like {
+        display: inline-block;
+        background-color: blue;
+        color: white;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        button-like:hover {
+            background-color: darkblue;
+        }
+</style>
+
+<div>
+    <h4>Test Information</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Owner ID</dt>
+        <dd class="col-sm-9">@Model.OwnerId</dd>
+
+        <dt class="col-sm-3">Language ID</dt>
+        <dd class="col-sm-9">@Model.LanguageId</dd>
+
+        <dt class="col-sm-3">Total Time</dt>
+        <dd class="col-sm-9">@totalSeconds seconds</dd>
+    </dl>
+</div>
+
+<div>
+    <h4>Words</h4>
+    <hr />
+
+    @for (int i = 0; i < Model.Words.Count; i++)
+    {
+        @if (ViewBag.WordIdToTranslationMap[@Model.Words[i].ID] != null)
+        {
+
+
+
+
+            <div id="@Model.Words[i].ID">
+
+                <form id="@Model.Words[i].OriginalWord">
+                    <div>
+                        <h5>@Model.Words[i].OriginalWord</h5>
+
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" id="@Model.Words[i].OriginalWord-progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="button-like">
+                                <label>
+                                    @ViewBag.WordIdToTranslationMap[@Model.Words[i].ID].Translation
+                                    <input type="radio" id="@ViewBag.WordIdToTranslationMap[@Model.Words[i].ID].ID + @Model.Options" name="option" value="@ViewBag.WordIdToTranslationMap[@Model.Words[i].ID].ID">
+                                </label>
+                            </div>
+
+                            @for (int j = 0; j < Model.Options - 1; j++)
+                            {
+
+                                int randomIndex = new Random().Next(0, ViewBag.TranslatedWords.Count);
+
+                                 SelectListItem randomElement = ViewBag.TranslatedWords[randomIndex];
+
+                                string value = randomElement.Value;
+                                string text = randomElement.Text;
+
+                                <div class="button-like">
+                                    <label>
+                                        @text
+                                        <input type="radio" id="@value + @j" name="option" value="@value">
+                                    </label>
+                                </div>
+
+                            }
+                        </div>
+
+
+                        <input type="hidden" value="@Model.Words[i].ID" name="wordId" />
+                        <input type="hidden" value="@Model.Words[i].OriginalWord" name="originalWord" />
+                        <input type="hidden" value="@ViewBag.WordIdToTranslationMap[@Model.Words[i].ID].Translation" name="translationWord" />
+
+
+
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="display: none;">Verify</button>
+                </form>
+
+            </div>
+        }
+        else
+        {
+            <p>No translation for @Model.Words[i].OriginalWord to @Model.Language.Key</p>
+        }
+    }
+
+</div>
+
+
+@section Scripts {
+
+
+
+    @for (int i = 0; i < Model.Words.Count; i++)
+    {
+        var delay = Model.TimePerWord * (i + 1);
+
+        <script>
+        $(function() {
+            
+            $('#@Model.Words[i].OriginalWord').on('submit', function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: '@Url.Action("StartTest", "Tests")',
+                    method: 'GET',
+                    data: formData,
+                    success: function(result) {
+                        $('#@Model.Words[i].ID').html(result);
+                    }
+                });
+            });
+        });
+
+
+
+                setTimeout(() => {
+    var progressBar = $('#@Model.Words[i].OriginalWord-progressbar');
+    var progress = 0;
+    var interval = setInterval(function() {
+        progress += 10;
+        progressBar.css('width', progress + '%');
+        if (progress >= 100) {
+            clearInterval(interval);
+            $('#@Model.Words[i].OriginalWord').submit();
+        }
+    }, @delay * 100);
+}, 0);
+
+        </script>
+    }
+<script>
+       $('input[type="radio"]').on('change', function() {
+    $(this).closest('form').submit();
+    });
+</script>
+ 
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
