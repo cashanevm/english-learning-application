@@ -56,6 +56,7 @@ namespace english_learning_application.Controllers
         // POST: DisplaySentence/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Create([Bind("SentenceId,Display")] DisplaySentence displaySentence)
         {
             var sentence = await _context.Sentences.FirstOrDefaultAsync(m => m.ID == displaySentence.SentenceId);
@@ -63,6 +64,7 @@ namespace english_learning_application.Controllers
             if (sentence != null)
             {
                 displaySentence.Sentence = sentence;
+
 
                 _context.Add(displaySentence);
                 await _context.SaveChangesAsync();
@@ -162,13 +164,14 @@ namespace english_learning_application.Controllers
         {
             return _context.DisplaySentences.Any(e => e.ID == id);
         }
-
+        
         [HttpGet]
         public JsonResult IsDisplayUnique(int ID, string Display)
         {
             var isUnique = !_context.DisplaySentences.Any(ds => ds.ID != ID && ds.Display == Display);
             return Json(isUnique);
         }
+
     }
 }
 

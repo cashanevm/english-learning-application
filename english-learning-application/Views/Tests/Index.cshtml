@@ -1,13 +1,10 @@
-﻿@model List<english_learning_application.Models.TranslatedWord>
+﻿@model List<english_learning_application.Models.Test>
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, english_learning_application
 
-@{
-    ViewData["Title"] = "Translated Words";
-}
 
-<h1>@ViewData["Title"]</h1>
+<h1>Tests</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -17,16 +14,19 @@
     <thead>
         <tr>
             <th>
-                Text
+               ID
             </th>
             <th>
-                Language KEY
+                TimePerWord
             </th>
             <th>
-                SpeechPart.Name
+               OwnerId
             </th>
             <th>
-                Translation
+              Options
+            </th>
+            <th>
+               Language.Name
             </th>
             <th></th>
         </tr>
@@ -36,20 +36,23 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Word.OriginalWord)
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimePerWord)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OwnerId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Options)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Language.Key)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SpeechPart.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Translation)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                     <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
                 </td>
             </tr>

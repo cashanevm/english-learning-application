@@ -65,6 +65,7 @@ namespace english_learning_application.Controllers
             {
 
                 displayWord.Word = word;
+
                 _context.Add(displayWord);
                 await _context.SaveChangesAsync();
 
@@ -181,6 +182,7 @@ namespace english_learning_application.Controllers
             var isUnique = !_context.DisplayWords.Any(dw => dw.ID != ID && dw.Display == Display);
             return Json(isUnique);
         }
+
     }
 }
 

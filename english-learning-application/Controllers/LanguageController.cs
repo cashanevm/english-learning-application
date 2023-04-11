@@ -151,6 +151,7 @@ namespace english_learning_application.Controllers
             var isUnique = !_context.Languages.Any(l => l.ID != ID && l.Key == Key);
             return Json(isUnique);
         }
+
     }
 }
 
