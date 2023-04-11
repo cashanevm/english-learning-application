@@ -1,0 +1,82 @@
+﻿@model english_learning_application.Models.Sentence
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, english_learning_application
+
+<h2>Sentence Details</h2>
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td>ID</td>
+            <td>@Model.ID</td>
+        </tr>
+        <tr>
+            <td>Original Sentence</td>
+            <td>@Model.OriginalSentence</td>
+        </tr>
+        <tr>
+            <td>Word</td>
+            <td>@Model.Word.OriginalWord</td>
+        </tr>
+        <tr>
+            <td>Contexts</td>
+            <td>
+                @if (Model.Contexts.Any())
+                {
+                    <ul>
+                        @foreach (var context in Model.Contexts)
+                        {
+                            <li>@context.Name</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No contexts found.</p>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>Display Sentences</td>
+            <td>
+                @if (Model.DisplaySentences.Any())
+                {
+                    <ul>
+                        @foreach (var displaySentence in Model.DisplaySentences)
+                        {
+                            <li>@displaySentence.Display</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No display sentences found.</p>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>Translated Sentences</td>
+            <td>
+                @if (Model.TranslatedSentences.Any())
+                {
+                    <ul>
+                        @foreach (var translatedSentence in Model.TranslatedSentences)
+                        {
+                            <li>@translatedSentence.Translation</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No translated sentences found.</p>
+                }
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

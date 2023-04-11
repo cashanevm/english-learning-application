@@ -1,0 +1,120 @@
+﻿@model english_learning_application.Models.Language
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, english_learning_application
+
+<h1>Details</h1>
+
+<div>
+    <h4>Language</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Key)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Key)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <h4>Translated Sentences</h4>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Original Sentence
+                </th>
+                <th>
+                    Translated Sentence
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var translatedSentence in Model.TranslatedSentences)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => translatedSentence.Sentence.OriginalSentence)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => translatedSentence.Translation)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <h4>Translated Words</h4>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Original Word
+                </th>
+                <th>
+                    Translated Word
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var translatedWord in Model.TranslatedWords)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => translatedWord.Word.OriginalWord)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => translatedWord.Translation)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <h4>Tests</h4>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Test Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Question Count
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var test in Model.Tests)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => test.OwnerId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => test.TimePerWord)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => test.Options)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
