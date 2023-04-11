@@ -11,11 +11,11 @@ namespace english_learning_application.Controllers
 {
     [ApiController]
     [Route("api/languages")]
-    public class LanguagesController : ControllerBase
+    public class LanguagesApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public LanguagesController(ApplicationDbContext context)
+        public LanguagesApiController(ApplicationDbContext context)
         {
             _context = context;
         }

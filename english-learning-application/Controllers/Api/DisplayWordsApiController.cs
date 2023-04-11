@@ -3,7 +3,6 @@ using System;
 using english_learning_application.Controllers.Dto;
 using english_learning_application.Data;
 using english_learning_application.Models;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +10,11 @@ namespace english_learning_application.Controllers
 {
     [ApiController]
     [Route("api/display/words")]
-    public class DisplayWordsController : ControllerBase
+    public class DisplayWordsApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public DisplayWordsController(ApplicationDbContext context)
+        public DisplayWordsApiController(ApplicationDbContext context)
         {
             _context = context;
         }
