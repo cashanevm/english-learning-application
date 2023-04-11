@@ -57,10 +57,15 @@ namespace english_learning_application.Controllers
         // POST: DisplayWord/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,WordId,Display")] DisplayWord displayWord)
+        public async Task<IActionResult> Create([Bind("WordId,Display")] DisplayWord displayWord)
         {
-            if (ModelState.IsValid)
+            var word = await _context.Words.FirstOrDefaultAsync(m => m.ID == displayWord.WordId);
+
+            if (word!= null)
             {
+
+                displayWord.Word = word;
+
                 _context.Add(displayWord);
                 await _context.SaveChangesAsync();
 
@@ -170,6 +175,14 @@ namespace english_learning_application.Controllers
         {
             return _context.DisplayWords.Any(e => e.ID == id);
         }
+
+        [HttpGet]
+        public JsonResult IsDisplayUnique(int ID, string Display)
+        {
+            var isUnique = !_context.DisplayWords.Any(dw => dw.ID != ID && dw.Display == Display);
+            return Json(isUnique);
+        }
+
     }
 }
 

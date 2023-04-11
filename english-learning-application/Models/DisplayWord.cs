@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace english_learning_application.Models
@@ -15,7 +17,11 @@ namespace english_learning_application.Models
         public Word Word { get; set; }
 
         //unic key
-        [Required]
+
+        [Required(ErrorMessage = "The display field is required.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "The display must be between 2 and 50 characters.")]
+        [RegularExpression("^[a-zA-Z]*$", ErrorMessage = "The display can only contain letters.")]
+        [Remote("IsDisplayUnique", "DisplaySentence", AdditionalFields = "ID", ErrorMessage = "The display is not unique.")]
         public string Display { get; set; }
     }
 }

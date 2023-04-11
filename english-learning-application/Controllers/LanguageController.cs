@@ -144,6 +144,14 @@ namespace english_learning_application.Controllers
         {
             return _context.Languages.Any(e => e.ID == id);
         }
+
+        [HttpGet]
+        public JsonResult IsKeyUnique(int ID, string Key)
+        {
+            var isUnique = !_context.Languages.Any(l => l.ID != ID && l.Key == Key);
+            return Json(isUnique);
+        }
+
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace english_learning_application.Models
@@ -10,7 +11,9 @@ namespace english_learning_application.Models
         public int ID { get; set; }
 
         //unic key
-        [Required]
+        [Required(ErrorMessage = "The language key is required.")]
+        [MaxLength(3, ErrorMessage = "The language key must be at most 3 characters long.")]
+        [Remote("IsKeyUnique", "Language", AdditionalFields = "ID", ErrorMessage = "The language key is not unique.")]
         public string Key { get; set; }
 
         //one Language to many Test
