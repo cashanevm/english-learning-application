@@ -93,6 +93,11 @@ public class ApplicationDbContext : IdentityDbContext
         builder.Entity<Context>()
             .HasIndex(context => context.Name)
             .IsUnique();
+        //Word
+        builder.Entity<Word>()
+         .HasMany<DisplayWord>(word => word.DisplayWords)
+         .WithOne(displayWord => displayWord.Word)
+         .HasForeignKey(displayWord => displayWord.WordId);
 
         //Test
         builder.Entity<Test>()
