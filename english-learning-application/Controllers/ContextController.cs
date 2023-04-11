@@ -157,22 +157,6 @@ namespace english_learning_application.Controllers
             return _context.Contexts.Any(c => c.ID == id);
         }
 
-        //[HttpGet]
-        //public JsonResult IsNameValid(string name)
-        //{
-        //    bool isValid = !_context.Contexts.Any(c => c.Name == name);
-
-        //    if (isValid)
-        //    {
-        //        return Json(true);
-        //    }
-        //    else
-        //    {
-        //        string errorMessage = "The name already exists.";
-        //        return Json(errorMessage);
-        //    }
-        //}
-
         [HttpGet]
         public JsonResult IsNameUnique(int ID, string Name)
         {
