@@ -1,4 +1,4 @@
-﻿@model english_learning_application.Models.TranslatedSentence
+@model english_learning_application.Models.TranslatedSentence
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, english_learning_application
@@ -14,6 +14,7 @@
             <div class="form-group">
                 <label asp-for="OwnerId" class="control-label"></label>
                 <input asp-for="OwnerId" class="form-control" />
+                <input asp-for="ID" type="hidden" />
                 <span asp-validation-for="OwnerId" class="text-danger"></span>
             </div>
             <div class="form-group">
