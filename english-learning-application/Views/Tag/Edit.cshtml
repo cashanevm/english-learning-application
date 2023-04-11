@@ -15,7 +15,6 @@
         <label asp-for="Words" class="control-label"></label>
         <select asp-for="Words" asp-items="@(new SelectList(ViewBag.Words, "ID", "OriginalWord", Model.Words))" multiple class="form-control"></select>
         <span asp-validation-for="Words" class="text-danger"></span>
-        <input asp-for="ID" type="hidden" />
     </div>
     <input asp-for="ID" type="hidden" />
     <div class="form-group">
