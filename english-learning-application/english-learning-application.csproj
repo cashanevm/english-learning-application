@@ -20,10 +20,30 @@
 
   <ItemGroup>
     <None Remove="Controllers\Api\" />
-    <None Remove="Controllers\Dto\" />
+    <None Remove="Controllers\Api\Dto\" />
+    <None Remove="Views\Context\" />
+    <None Remove="Views\DisplaySentence\" />
+    <None Remove="Views\DisplayWord\" />
+    <None Remove="Views\Language\" />
+    <None Remove="Views\Sentence\" />
+    <None Remove="Views\SpeechPart\" />
+    <None Remove="Views\Tag\" />
+    <None Remove="Views\Tests\" />
+    <None Remove="Views\TranslatedWords\" />
+    <None Remove="Views\Word\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\Api\" />
-    <Folder Include="Controllers\Dto\" />
+    <Folder Include="Controllers\Api\Dto\" />
+    <Folder Include="Views\Context\" />
+    <Folder Include="Views\DisplaySentence\" />
+    <Folder Include="Views\DisplayWord\" />
+    <Folder Include="Views\Language\" />
+    <Folder Include="Views\Sentence\" />
+    <Folder Include="Views\SpeechPart\" />
+    <Folder Include="Views\Tag\" />
+    <Folder Include="Views\Tests\" />
+    <Folder Include="Views\TranslatedWords\" />
+    <Folder Include="Views\Word\" />
   </ItemGroup>
 </Project>

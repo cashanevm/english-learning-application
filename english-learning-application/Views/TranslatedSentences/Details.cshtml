@@ -1,0 +1,33 @@
+﻿@model english_learning_application.Models.TranslatedSentence
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, english_learning_application
+
+<h1>Details</h1>
+
+<div>
+    <h4>TranslatedSentence</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.ID)</dd>
+
+        <dt class="col-sm-3">Owner ID</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.OwnerId)</dd>
+
+        <dt class="col-sm-3">Word</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Word.OriginalWord)</dd>
+
+        <dt class="col-sm-3">Sentence</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Sentence.OriginalSentence)</dd>
+
+        <dt class="col-sm-3">Language</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Language.Key)</dd>
+
+        <dt class="col-sm-3">Translation</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Translation)</dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,0 +1,31 @@
+﻿@model english_learning_application.Models.DisplayWord
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, english_learning_application
+
+
+<h2>Edit Display Word</h2>
+
+<form asp-action="Edit">
+    <div class="form-group">
+        <label asp-for="WordId" class="control-label"></label>
+        <select asp-for="WordId" asp-items="@ViewBag.Words" class="form-control"></select>
+        <span asp-validation-for="WordId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Display" class="control-label"></label>
+        <input asp-for="Display" class="form-control" />
+        <input asp-for="ID" type="hidden" />
+        <span asp-validation-for="Display" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+    <input type="hidden" asp-for="ID" />
+</form>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using english_learning_application.Data;
 using english_learning_application.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +49,10 @@ namespace english_learning_application.Controllers
         // GET: TranslatedSentence/Create
         public IActionResult Create()
         {
+            ViewData["Words"] = _context.Words.ToList();
+            ViewData["Sentences"] = _context.Sentences.ToList();
+            ViewData["Languages"] = _context.Languages.ToList();
+
             return View();
         }
 
@@ -79,6 +83,10 @@ namespace english_learning_application.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["Words"] = _context.Words.ToList();
+            ViewData["Sentences"] = _context.Sentences.ToList();
+            ViewData["Languages"] = _context.Languages.ToList();
             return View(translatedSentence);
         }
 
@@ -151,3 +159,5 @@ namespace english_learning_application.Controllers
     }
 
 }
+
+

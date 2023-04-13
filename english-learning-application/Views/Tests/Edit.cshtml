@@ -1,0 +1,51 @@
+﻿@model english_learning_application.Models.Test
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, english_learning_application
+
+<h1>Edit</h1>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="ID" />
+    <div class="form-group">
+        <label asp-for="TimePerWord" class="control-label"></label>
+        <input asp-for="TimePerWord" class="form-control" />
+        <span asp-validation-for="TimePerWord" class="text-danger"></span>
+
+    </div>
+    <div class="form-group">
+        <label asp-for="OwnerId" class="control-label"></label>
+        <input asp-for="OwnerId" class="form-control" />
+        <span asp-validation-for="OwnerId" class="text-danger"></span>
+
+    </div>
+    <div class="form-group">
+        <label asp-for="Options" class="control-label"></label>
+        <input asp-for="Options" class="form-control" />
+        <span asp-validation-for="Options" class="text-danger"></span>
+
+    </div>
+    <div class="form-group">
+        <label asp-for="LanguageId" class="control-label"></label>
+        <select asp-for="LanguageId" class="form-control" asp-items="ViewBag.LanguageId"></select>
+        <span asp-validation-for="LanguageId" class="text-danger"></span>
+
+    </div>
+    <div class="form-group">
+        <label asp-for="Words" class="control-label"></label>
+        <select asp-for="Words" class="form-control" asp-items="ViewBag.Words" multiple></select>
+        <span asp-validation-for="Words" class="text-danger"></span>
+
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
