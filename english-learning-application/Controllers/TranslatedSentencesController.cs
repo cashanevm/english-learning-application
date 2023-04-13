@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using english_learning_application.Data;
 using english_learning_application.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -67,7 +67,7 @@ namespace english_learning_application.Controllers
             var word = await _context.Words.FirstOrDefaultAsync(m => m.ID == translatedSentence.WordId);
 
 
-            if (sentence!= null && language!=null && word!= null)
+            if (sentence!= null && language!=null && word!= null && IsUnique(translatedSentence.ID, translatedSentence.Translation))
             {
                 translatedSentence.Sentence = sentence;
                 translatedSentence.Language = language;
@@ -75,7 +75,10 @@ namespace english_learning_application.Controllers
 
 
                 _context.Add(translatedSentence);
-                await _context.SaveChangesAsync();
+                if (_context.SaveChanges() != 1)
+                {
+                    return BadRequest();
+                }
                 return RedirectToAction(nameof(Index));
             }
 
@@ -115,12 +118,15 @@ namespace english_learning_application.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && IsUnique(translatedSentence.ID, translatedSentence.Translation))
             {
                 try
                 {
                     _context.Update(translatedSentence);
-                    await _context.SaveChangesAsync();
+                    if (_context.SaveChanges() != 1)
+                    {
+                        return BadRequest();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -163,7 +169,10 @@ namespace english_learning_application.Controllers
         {
             var translatedSentence = await _context.TranslatedSentences.FindAsync(id);
             _context.TranslatedSentences.Remove(translatedSentence);
-            await _context.SaveChangesAsync();
+            if (_context.SaveChanges() != 1)
+            {
+                return BadRequest();
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -177,6 +186,11 @@ namespace english_learning_application.Controllers
         {
             var isUnique = !_context.TranslatedSentences.Any(t => t.ID != ID && t.Translation == Translation);
             return Json(isUnique);
+        }
+
+        public bool IsUnique(int ID, string Translation)
+        {
+            return !_context.TranslatedSentences.Any(t => t.ID != ID && t.Translation == Translation);
         }
     }
 
