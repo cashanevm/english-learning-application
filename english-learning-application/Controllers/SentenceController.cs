@@ -62,12 +62,15 @@ namespace english_learning_application.Controllers
         {
             var word = await _context.Words.FirstOrDefaultAsync(m => m.ID == sentence.WordId);
 
-            if (word != null)
+            if (word != null && IsOriginalUnique(sentence.ID, sentence.OriginalSentence))
             {
                 sentence.Word = word;
 
                 _context.Add(sentence);
-                await _context.SaveChangesAsync();
+                if (_context.SaveChanges() != 1)
+                {
+                    return BadRequest();
+                }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["WordId"] = new SelectList(_context.Words, "ID", "OriginalWord", sentence.WordId);
@@ -101,12 +104,15 @@ namespace english_learning_application.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && IsOriginalUnique(sentence.ID, sentence.OriginalSentence))
             {
                 try
                 {
                     _context.Update(sentence);
-                    await _context.SaveChangesAsync();
+                    if (_context.SaveChanges() != 1)
+                    {
+                        return BadRequest();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -166,7 +172,10 @@ namespace english_learning_application.Controllers
             }
 
             _context.Sentences.Remove(sentence);
-            await _context.SaveChangesAsync();
+            if (_context.SaveChanges() != 1)
+            {
+                return BadRequest();
+            }
 
             return RedirectToAction(nameof(Index));
         }
@@ -181,6 +190,12 @@ namespace english_learning_application.Controllers
         {
             var isUnique = !_context.Sentences.Any(s => s.ID != ID && s.OriginalSentence == OriginalSentence);
             return Json(isUnique);
+        }
+
+        [HttpGet]
+        public bool IsOriginalUnique(int ID, string OriginalSentence)
+        {
+            return!_context.Sentences.Any(s => s.ID != ID && s.OriginalSentence == OriginalSentence);
         }
     }
 }
