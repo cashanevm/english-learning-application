@@ -51,13 +51,10 @@ namespace english_learning_application.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Name")] SpeechPart speechPart)
         {
-            if (ModelState.IsValid && IsUnique(speechPart.ID, speechPart.Name))
+            if (ModelState.IsValid)
             {
                 _context.Add(speechPart);
-                if (_context.SaveChanges() != 1)
-                {
-                    return BadRequest();
-                }
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(speechPart);
@@ -89,15 +86,12 @@ namespace english_learning_application.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid && IsUnique(speechPart.ID, speechPart.Name))
+            if (ModelState.IsValid)
             {
                 try
                 {
                     _context.Update(speechPart);
-                    if (_context.SaveChanges() != 1)
-                    {
-                        return BadRequest();
-                    }
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -140,10 +134,7 @@ namespace english_learning_application.Controllers
         {
             var speechPart = await _context.SpeechParts.FindAsync(id);
             _context.SpeechParts.Remove(speechPart);
-            if (_context.SaveChanges() != 1)
-            {
-                return BadRequest();
-            }
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -157,12 +148,6 @@ namespace english_learning_application.Controllers
         {
             var isUnique = !_context.SpeechParts.Any(s => s.ID != ID && s.Name == Name);
             return Json(isUnique);
-        }
-
-        [HttpGet]
-        public bool IsUnique(int ID, string Name)
-        {
-            return !_context.SpeechParts.Any(s => s.ID != ID && s.Name == Name);
         }
     }
 }

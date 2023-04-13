@@ -54,7 +54,7 @@ namespace english_learning_application.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Tag tag)
         {
-            if (ModelState.IsValid && IsUnique(tag.ID, tag.Name))
+            if (ModelState.IsValid)
             {
                 _context.Tags.Add(tag);
                 _context.SaveChanges();
@@ -99,7 +99,7 @@ namespace english_learning_application.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid && IsUnique(tag.ID, tag.Name))
+            if (ModelState.IsValid)
             {
                 _context.Tags.Update(tag);
                 _context.SaveChanges();
@@ -144,12 +144,6 @@ namespace english_learning_application.Controllers
         {
             var isUnique = !_context.Tags.Any(t => t.ID != ID && t.Name == Name);
             return Json(isUnique);
-        }
-
-        [HttpGet]
-        public bool IsUnique(int ID, string Name)
-        {
-            return !_context.Tags.Any(t => t.ID != ID && t.Name == Name);
         }
     }
 }
