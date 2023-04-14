@@ -53,6 +53,43 @@
 </div>
 
 <p>
+    @Html.ActionLink("Start the test", "Start", new { id = Model.ID }) |
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+
+<!--<div id="result">-->
+    <!-- This is where the updated content will be displayed -->
+<!--</div>
+
+<form id="createForm" asp-action="Start">
+    <div class="form-group">
+        <input type="hidden", name="test-id" value="1"/>
+        <button type="submit" class="btn btn-primary">Start</button>
+    </div>
+</form>-->
+
+@*@section Scripts {
+    <script>
+        $(function() {
+            // Handle the form submission using AJAX
+            $('#createForm').on('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                var formData = $(this).serialize(); // Get the form data
+
+                //$('#createForm input[name="myInput"]')
+
+                $.ajax({
+                    url: '@Url.Action("Start", "Tests")', // Replace "YourController" with your actual controller name
+                    method: 'GET',
+                    data: formData,
+                    success: function(result) {
+                        $('#result').html(result); // Replace the existing content with the updated content
+                    }
+                });
+            });
+        });
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}*@

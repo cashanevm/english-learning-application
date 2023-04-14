@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Mono.TextTemplating;
 
 namespace english_learning_application.Models
 {
@@ -12,7 +12,10 @@ namespace english_learning_application.Models
         public int ID { get; set; }
 
         //unic key
-        [Required]
+        [Required(ErrorMessage = "The name is required.")]
+        [MaxLength(100, ErrorMessage = "The name cannot be longer than 100 characters.")]
+        [RegularExpression("^[a-zA-Z0-9\\s]*$", ErrorMessage = "The display can only contain letters, numbers, and spaces.")]
+        [Remote("IsNameUnique", "Context", AdditionalFields = "ID", ErrorMessage = "The name is not unique.")]
         public string Name { get; set; }
 
         //many Context to many TranslatedWord

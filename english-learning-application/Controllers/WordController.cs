@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using english_learning_application.Data;
 using english_learning_application.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -61,10 +61,13 @@ namespace english_learning_application.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,OriginalWord")] Word word)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && IsWordUnique(word.ID, word.OriginalWord))
             {
                 _context.Add(word);
-                await _context.SaveChangesAsync();
+                if (_context.SaveChanges() != 1)
+                {
+                    return BadRequest();
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(word);
@@ -101,7 +104,7 @@ namespace english_learning_application.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && IsWordUnique(word.ID, word.OriginalWord))
             {
                 try
                 {
@@ -127,7 +130,10 @@ namespace english_learning_application.Controllers
                     entity.OriginalWord = word.OriginalWord;
 
                     // Save the changes to the database
-                    await _context.SaveChangesAsync();
+                    if (_context.SaveChanges() != 1)
+                    {
+                        return BadRequest();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -172,13 +178,28 @@ namespace english_learning_application.Controllers
         {
             var word = await _context.Words.FindAsync(id);
             _context.Words.Remove(word);
-            await _context.SaveChangesAsync();
+            if (_context.SaveChanges() != 1)
+            {
+                return BadRequest();
+            }
             return RedirectToAction(nameof(Index));
         }
 
         private bool WordExists(int id)
         {
             return _context.Words.Any(e => e.ID == id);
+        }
+
+        [HttpGet]
+        public JsonResult IsOriginalWordUnique(int ID, string OriginalWord)
+        {
+            var isUnique = !_context.Words.Any(w => w.ID != ID && w.OriginalWord == OriginalWord);
+            return Json(isUnique);
+        }
+
+        public bool IsWordUnique(int ID, string OriginalWord)
+        {
+            return !_context.Words.Any(w => w.ID != ID && w.OriginalWord == OriginalWord);
         }
     }
 }

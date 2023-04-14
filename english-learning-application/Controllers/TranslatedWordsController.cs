@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using english_learning_application.Data;
 using english_learning_application.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -46,26 +46,39 @@ namespace english_learning_application.Controllers
         // GET: TranslatedWords/Create
         public IActionResult Create()
         {
-            ViewData["LanguageId"] = new SelectList(_context.Languages, "ID", "Name");
-            ViewData["SpeechPartId"] = new SelectList(_context.SpeechParts, "ID", "Name");
-            ViewData["WordId"] = new SelectList(_context.Words, "ID", "Text");
+            ViewData["Words"] = new SelectList(_context.Words, "ID", "OriginalWord");
+            ViewData["Languages"] = new SelectList(_context.Languages, "ID", "Key");
+            ViewData["SpeechParts"] = new SelectList(_context.SpeechParts, "ID", "Name");
             return View();
         }
 
         // POST: TranslatedWords/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,OwnerId,WordId,Translation,LanguageId,SpeechPartId")] TranslatedWord translatedWord)
+        public async Task<IActionResult> Create([Bind("OwnerId,WordId,Translation,LanguageId,SpeechPartId")] TranslatedWord translatedWord)
         {
-            if (ModelState.IsValid)
+            var speechPart = await _context.SpeechParts.FirstOrDefaultAsync(m => m.ID == translatedWord.SpeechPartId);
+            var language = await _context.Languages.FirstOrDefaultAsync(m => m.ID == translatedWord.LanguageId);
+            var word = await _context.Words.FirstOrDefaultAsync(m => m.ID == translatedWord.WordId);
+
+
+            if (speechPart != null && language != null && word != null && IsUnique(translatedWord.ID, translatedWord.Translation))
             {
+                translatedWord.SpeechPart = speechPart;
+                translatedWord.Language = language;
+                translatedWord.Word = word;
+
                 _context.Add(translatedWord);
-                await _context.SaveChangesAsync();
+                if (_context.SaveChanges() != 1)
+                {
+                    return BadRequest();
+                }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LanguageId"] = new SelectList(_context.Languages, "ID", "Name", translatedWord.LanguageId);
-            ViewData["SpeechPartId"] = new SelectList(_context.SpeechParts, "ID", "Name", translatedWord.SpeechPartId);
-            ViewData["WordId"] = new SelectList(_context.Words, "ID", "Text", translatedWord.WordId);
+
+            ViewData["Words"] = new SelectList(_context.Words, "ID", "OriginalWord");
+            ViewData["Languages"] = new SelectList(_context.Languages, "ID", "Key");
+            ViewData["SpeechParts"] = new SelectList(_context.SpeechParts, "ID", "Name");
             return View(translatedWord);
         }
 
@@ -98,12 +111,15 @@ namespace english_learning_application.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && IsUnique(translatedWord.ID, translatedWord.Translation))
             {
                 try
                 {
                     _context.Update(translatedWord);
-                    await _context.SaveChangesAsync();
+                    if (_context.SaveChanges() != 1)
+                    {
+                        return BadRequest();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -152,13 +168,29 @@ namespace english_learning_application.Controllers
         {
             var translatedWord = await _context.TranslatedWords.FindAsync(id);
             _context.TranslatedWords.Remove(translatedWord);
-            await _context.SaveChangesAsync();
+            if (_context.SaveChanges() != 1)
+            {
+                return BadRequest();
+            }
             return RedirectToAction(nameof(Index));
         }
 
         private bool TranslatedWordExists(int id)
         {
             return _context.TranslatedWords.Any(e => e.ID == id);
+        }
+
+        [HttpGet]
+        public JsonResult IsTranslationUnique(int ID, string Translation)
+        {
+            var isUnique = !_context.TranslatedWords.Any(tw => tw.ID != ID && tw.Translation == Translation);
+            return Json(isUnique);
+        }
+
+        [HttpGet]
+        public bool IsUnique(int ID, string Translation)
+        {
+            return !_context.TranslatedWords.Any(tw => tw.ID != ID && tw.Translation == Translation);
         }
     }
 }

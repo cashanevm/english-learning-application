@@ -3,7 +3,6 @@ using System.Linq;
 using english_learning_application.Controllers.Dto;
 using english_learning_application.Data;
 using english_learning_application.Models;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

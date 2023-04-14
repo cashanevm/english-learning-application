@@ -21,8 +21,11 @@ namespace english_learning_application
             services.AddControllersWithViews();
         }
 
-        public void Configure(IApplicationBuilder app)
+
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+  
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -31,15 +34,9 @@ namespace english_learning_application
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                 name: "context",
-                 pattern: "Context/{id?}",
-                 defaults: new { controller = "Context", action = "Details" });
-
-                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
         }
     }
 }
